@@ -49,7 +49,7 @@ class ReceiptOrderController extends Controller
         if($notrans == null){
             $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound', '=' .$notrans)->limit(10)->get();
         }else{
-            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound',  'like',  '%'.$search)->limit(10)->get();
+            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound',  'like',  '%'.$notrans)->limit(10)->get();
         }
 
         $response = array();
@@ -77,7 +77,7 @@ class ReceiptOrderController extends Controller
         $response = array();
         foreach($kodes as $kode){
             $response[] = array(
-         "id"=>$kode->id,
+                "id"=>$kode->id,
                 "text"=>$kode->no,
                 "tgl"=>$kode->tdate,
                 "nama"=>$kode->name_mbp,
@@ -90,9 +90,9 @@ class ReceiptOrderController extends Controller
     public function getLokasi(Request $request){
         $searchLok = $request->searchLok;
         if($searchLok == ''){
-            $kodes = DB::table('mwhse')->orderby('code_mwhse','asc')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->limit(10)->get();
         }else{
-            $kodes = DB::table('mwhse')->orderby('code_mwhse','asc')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -106,7 +106,7 @@ class ReceiptOrderController extends Controller
     }
 
     public function updSKU(Request $request){
-        // dd($request->all());
+        dd($request->all());
         $notransfld = $request->input('noTrans');
         $notrans = $request->input('hdntrans');
         $sku = $request->input('skuhdn');
@@ -114,7 +114,7 @@ class ReceiptOrderController extends Controller
         $lokasi = $request->input('hdnlokasi');
         $qty = $request->input('qty');
         // dd($request->all());
-        DB::table('tinboundd')->where('no_tinbound','=',$notrans)->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'lokasi'=>$lokasi]);
+        DB::table('tinboundd')->where('no_tinbound','=',$notrans)->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
         
         // return redirect('/dashboard');
 

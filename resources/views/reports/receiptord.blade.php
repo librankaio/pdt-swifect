@@ -119,7 +119,7 @@
                         <input type="hidden" class="form-control mb-2" id="hdnlokasi" name="hdnlokasi" value="" aria-label="readonly input example" readonly>
                         {{-- END Hidden Lokasi --}}
                     </div>
-                    <label for="pallet" class="form-label">Pallet</label>
+                    <label for="pallet" class="form-label mt-2">Pallet</label>
                     <input type="text" class="form-control mb-2" id="pallet" name="pallet">
                     <div class="row">
                         <div class="col-sm-12 text-end mb-4">
@@ -139,6 +139,8 @@
 <script type="text/javascript">
     var tempResponse = [];
     var tempSku= [];
+    var tempLok = [];
+    var selectedLok = null;
     var selectedTrans = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -158,9 +160,10 @@
                     };
                 },
                 processResults: function (response) {
-                    console.log("response");
-                    console.log(JSON.stringify(response));
+                    // console.log("response");
+                    // console.log(JSON.stringify(response));
                     tempSku = response;
+                    // console.log(tempSku);
                     return {
                         results: response
                     };
@@ -168,14 +171,14 @@
                 cache: true
             }
         });
-        $(".select-trans").select2({
+        $("#noTrans").select2({
             ajax: {
                 url: "{{route('getNoTrans')}}",
                 type: "post",
                 dataType: "json",
                 delay: 250,
                 data: function (params) {
-                    console.log(JSON.stringify(params));
+                    // console.log(JSON.stringify(params));
                     return {
                         _token: CSRF_TOKEN,
                         searchTrans : params.term //search term
@@ -189,7 +192,6 @@
                     tempResponse = response
                     // console.log("tempResponse");
                     // console.log(tempResponse)
-                    console.log(tempResponse);
                     return {
                         results: tempResponse
                     };
@@ -203,7 +205,7 @@
             $("#hdntrans").val(tempResponse[this.value-1].text);
             // $("#tglTrans").val(tempResponse[this.value-1].tgl);
             tgl = tempResponse[this.value-1].tgl;
-            console.log(tgl);
+            // console.log(tgl);
             date = new Date(tgl).toLocaleDateString('en-GB');
             $("#tglTrans").val(date);
             $("#pemilik").val(tempResponse[this.value-1].nama);
@@ -215,18 +217,20 @@
             $("#kode").append("<option value='0'>--Select Code--</option>");
             $("#nama_sku").val(null);
             $("#sat").val(null);
-            console.log(selectedTrans);
-            console.log($( "#noTrans" ).val());
+            // console.log(selectedTrans);
+            // console.log($( "#noTrans" ).val());
         });
 
         $("#kode").change(function (e) {
-            console.log($("#kode").prop("selectedIndex"))
-            console.log(tempSku);
+            // console.log($("#kode").prop("selectedIndex"))
+            // console.log(tempSku);
             $("#nama_sku").val(tempSku[$("#kode").prop("selectedIndex") - 1].nama);
             $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
             // $("#lokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
             $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
             $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
+            // $("#hdnlokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
+            console.log($("#hdnlokasi").val());
             document.getElementById('qty').focus();
         })
 
@@ -259,22 +263,57 @@
                 data: function (params) {
                     return {
                         _token: CSRF_TOKEN,
-                        search :  params.term, //search term
-                        // notrans: selectedTrans
+                        searchLok :  params.term //search term
+                        // searchLok: selectedLok
                     };
                 },
                 processResults: function (response) {
                     console.log("response");
                     console.log(JSON.stringify(response));
-                    // tempSku = response;
+                    tempLok = response;
                     // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
                     // console.log(tempResponse);
+                    console.log(tempLok)
                     return {
-                        results: response
+                        results: tempLok
                     };
                 },
                 cache: true
             }
         });
+    $("#lokasi").change(function (e) {
+        $("#hdnlokasi").val(tempLok[$("#lokasi").prop("selectedIndex")].text);
+    });
+    // VALIDATE TRIGGER
+    $("#qty").keyup(function(e){
+        if (/\D/g.test(this.value)){
+            // Filter non-digits from input value.
+            this.value = this.value.replace(/\D/g, '');
+        }
+    });
+    $(document).on("click","#ok",function(e){
+        // Validate ifnull
+        notrans = $("#noTrans").val();
+        sku = $("#kode").val();
+        qty = $("#qty").val();
+        lokasi = $("#lokasi").val();
+        pallet = $("#pallet").val();
+        if (notrans == ""){
+            alert("Please select No Transaksi");
+            return false;
+        }else if (sku == ""){
+            alert("Please select SKU");
+            return false;
+        }else if (qty == ""){
+            alert("Please insert Value of Quantity");
+            return false;
+        }else if (lokasi == ""){
+            alert("Please select Lokasi");
+            return false;
+        }else if (pallet == ""){
+            alert("Please insert Value of Pallet");
+            return false;
+        }
+    });
 </script>
 @endsection
