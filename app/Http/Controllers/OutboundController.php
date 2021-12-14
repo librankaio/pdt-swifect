@@ -74,7 +74,7 @@ class OutboundController extends Controller
     }
 
     public function updSKU(Request $request){
-        dd($request->all());
+        // dd($request->all());
         $notrans = $request->input('hdntrans');
         $sku = $request->input('skuhdn');
         $pallet = $request->input('pallet');

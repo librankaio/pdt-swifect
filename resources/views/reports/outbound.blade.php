@@ -14,7 +14,7 @@
                             <?php 
                             if(request()->input('noTrans') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2" id="noTrans" onchange="">
+                            <select type="text" class="form-control mb-2" id="noTrans" onchange="" name="noTrans">
                                 <option value='0'>--Select Code--</option>
                             </select>
                             <?php }else{?>
@@ -39,7 +39,7 @@
                             <?php 
                             if(request()->input('tglTrans') == null){ 
                             ?>
-                                <input type="text" class="form-control mb-2" id="tglTrans" value="" aria-label="readonly input example" onchange="notrans()" readonly>
+                                <input type="text" class="form-control mb-2" id="tglTrans" value="" aria-label="readonly input example" onchange="notrans()" name="tglTrans" readonly>
                             <?php }else{?>
                                 <input type="text" class="form-control mb-2" id="tglTrans" value="{{ $_GET['tglTrans'] }}" aria-label="readonly input example" onchange="notrans()" name="tglTrans" readonly>
                             <?php } ?>
@@ -58,7 +58,7 @@
                             <?php 
                             if(request()->input('pemilik') == null){ 
                             ?>
-                                <input type="text" class="form-control mb-2" id="pemilik" aria-label="readonly input example" readonly>
+                                <input type="text" class="form-control mb-2" id="pemilik" aria-label="readonly input example" name="pemilik" readonly>
                             <?php }else{?>
                                 <input type="text" class="form-control mb-2" id="pemilik" aria-label="readonly input example" value="{{ $_GET['pemilik'] }}" name="pemilik" readonly>
                             <?php } ?>
@@ -70,7 +70,7 @@
                             <?php 
                             if(request()->input('note') == null){ 
                             ?>
-                                <textarea type="text" class="form-control mb-2" id="note" value="" aria-label="readonly input example" readonly></textarea>
+                                <textarea type="text" class="form-control mb-2" id="note" value=""aria-label="readonly input example" name="note" readonly></textarea>
                             <?php }else{?>
                                 <textarea type="text" class="form-control mb-2" id="note" value="" aria-label="readonly input example" value="{{ $_GET['note'] }}" name="note" readonly></textarea>
                             <?php } ?>
