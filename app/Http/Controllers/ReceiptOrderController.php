@@ -106,7 +106,7 @@ class ReceiptOrderController extends Controller
     }
 
     public function updSKU(Request $request){
-        dd($request->all());
+        // dd($request->all());
         $notransfld = $request->input('noTrans');
         $notrans = $request->input('hdntrans');
         $sku = $request->input('skuhdn');
