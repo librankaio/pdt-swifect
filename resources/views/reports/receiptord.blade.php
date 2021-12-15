@@ -2,7 +2,8 @@
 @section('content')
 <body>
 <form action="" class="px-4">
-    <div class="container">      
+    <div class="container">
+        @include('layouts.flash-message')   
         <h3>INBOUND TRANSACTION</h3>
         <br>     
         <div class="row">
@@ -142,30 +143,36 @@
     var tempLok = [];
     var selectedLok = null;
     var selectedTrans = null;
+    var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
         // #kode = SKU
+        // var selTrans = $('#noTrans option:selected').text();
         $("#kode").select2({
             ajax: {
                 url: "{{route('getKode')}}",
                 type: "post",
                 dataType: "json",
-                delay: 50,
+                delay: 250,
                 data: function (params) {
                     return {
                         _token: CSRF_TOKEN,
-                        search :  params.term, //search term
-                        notrans: selectedTrans
+                        searchsku :  params.term, //search term
+                        // notrans: selectedTrans
+                        notrans: selTrans
                     };
                 },
                 processResults: function (response) {
+                    // console.log(selectedTrans);
                     // console.log("response");
                     // console.log(JSON.stringify(response));
                     tempSku = response;
-                    // console.log(tempSku);
+                    console.log("tempSku");
+                    console.log(tempSku);
+                    console.log(selTrans);
                     return {
-                        results: response
+                        results: tempSku
                     };
                 },
                 cache: true
@@ -190,8 +197,8 @@
                     // tempResponse = response;
                     // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
                     tempResponse = response
-                    // console.log("tempResponse");
-                    // console.log(tempResponse)
+                    console.log("tempResponse");
+                    console.log(tempResponse)
                     return {
                         results: tempResponse
                     };
@@ -201,7 +208,9 @@
         });
         // noTrans = No Transaksi
         $("#noTrans").change(function (e) {
-            selectedTrans = tempResponse[this.value-1].text;
+            // selTrans = $('#noTrans option:selected').text();
+            // selectedTrans = tempResponse[this.value-1].text;
+            selTrans = tempResponse[this.value-1].text;
             $("#hdntrans").val(tempResponse[this.value-1].text);
             // $("#tglTrans").val(tempResponse[this.value-1].tgl);
             tgl = tempResponse[this.value-1].tgl;
@@ -217,13 +226,17 @@
             $("#kode").append("<option value='0'>--Select Code--</option>");
             $("#nama_sku").val(null);
             $("#sat").val(null);
-            // console.log(selectedTrans);
+            $("#pallet").val(null);
+            $("#lokasi").empty();
+            $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
+            console.log(selectedTrans);
             // console.log($( "#noTrans" ).val());
         });
-
+        // SKU
         $("#kode").change(function (e) {
             // console.log($("#kode").prop("selectedIndex"))
-            // console.log(tempSku);
+            selectedSKU = tempSku[this.value-1].text;
+            console.log(selectedSKU);
             $("#nama_sku").val(tempSku[$("#kode").prop("selectedIndex") - 1].nama);
             $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
             // $("#lokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
@@ -245,7 +258,7 @@
         document.getElementById('sat').value = "";
         // document.getElementById('lokasi').value = "";
         $("#lokasi").empty();
-        $("#lokasi").append("<option value='0'>--Select Code--</option>");
+        $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
         document.getElementById('pallet').value = "";
         $("#noTrans").empty();
         $("#noTrans").append("<option value='0'>--Select Code--</option>");
@@ -282,7 +295,9 @@
             }
         });
     $("#lokasi").change(function (e) {
-        $("#hdnlokasi").val(tempLok[$("#lokasi").prop("selectedIndex")].text);
+        selectedLok = tempLok[this.value-1].text;
+        console.log(selectedLok);
+        $("#hdnlokasi").val(selectedLok);
     });
     // VALIDATE TRIGGER
     $("#qty").keyup(function(e){

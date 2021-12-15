@@ -7,11 +7,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ 'dashboard' }}">Inbound</a>
+                <a class="nav-link active" aria-current="page" href="{{ 'dashboard' }}"><i class="fas fa-sign-in-alt"></i><span> Inbound</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ 'outbound' }}">Outbound</a>
-                </li>
+                <a class="nav-link active" aria-current="page" href="{{ 'outbound' }}"><i class="fas fa-sign-out-alt"></i><span> Outbound</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ 'logout' }}"><i class="fas fa-power-off"></i><span> Logout</span></a>
+            </li>
             <!-- <li class="nav-item">
             <a class="nav-link" href="#">Features</a>
             </li>

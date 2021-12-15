@@ -17,50 +17,64 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-//LOGIN AND REGISTER
-// Route::get('/',[LoginController::class, 'index'])->name('index');
-
-// Route::get('/register',[RegisterController::class, 'index'])->name('register');
-// END LOGIN AND REGISTER
-// Route::group(['middleware' => ['auth']], function(){
-//     Route::get('/dashboard',[ReceiptOrderController::class, 'index'])->name('index');
-
-//     Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
-
-//     Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
-
-//     Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
-
-//     Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
-
-//     Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
+// Route::get('/', function () {
+//     return view('welcome');
 // });
+//LOGIN AND LOGOUT
+Route::get('/',[LoginController::class, 'index'])->name('index');
+Route::post('/', [LoginController::class, 'postLogin'])->name('login');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+// END LOGIN AND LOGOUT
+Route::group(['middleware' => ['auth']], function(){
+    // INBOUND
+    Route::get('/dashboard',[ReceiptOrderController::class, 'index'])->name('index');
 
-// INBOUND
-Route::get('/dashboard',[ReceiptOrderController::class, 'index'])->name('index');
+    Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
 
-Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
+    Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
 
-Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
+    Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
 
-Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
+    Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
 
-Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
+    Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
+    // END INBOUND
 
-Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
-// END INBOUND
+    // OUTBOUND
+    Route::get('/outbound',[OutboundController::class, 'index'])->name('index');
 
-// OUTBOUND
-Route::get('/outbound',[OutboundController::class, 'index'])->name('index');
+    Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
 
-Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
+    Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
 
-Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
+    Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
 
-Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
+    Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
+    // END OUTBOUND
+});
 
-Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
-// END OUTBOUND
+// // INBOUND
+// Route::get('/dashboard',[ReceiptOrderController::class, 'index'])->name('index');
+
+// Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
+
+// Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
+
+// Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
+
+// Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
+
+// Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
+// // END INBOUND
+
+// // OUTBOUND
+// Route::get('/outbound',[OutboundController::class, 'index'])->name('index');
+
+// Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
+
+// Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
+
+// Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
+
+// Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
+// // END OUTBOUND

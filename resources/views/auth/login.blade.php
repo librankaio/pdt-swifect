@@ -15,7 +15,7 @@
     {{-- <div class="container-fluid bg-primary" style="height: 1000px, width: 100%">ewq
         <div class="container bg-info text-center">asdffas</div>
     </div> --}}
-    <form action="" method="post">
+    <form action="{{ route('login') }}" method="post">
         <section class="vh-100 bg-img">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -26,13 +26,21 @@
                         <h3 class="mb-5">Sign in</h3>
             
                         <div class="form-outline mb-3 text-start">
+                            @if(session('flash_message_error'))
+                                <div class="alert alert-danger alert-block">
+                                    {{ session('flash_message_error') }}
+                                    {{-- <button type="button"class="close" data-dismiss="alert">
+                                        <strong>{!! session('flash_message_error') !!}</strong>
+                                    </button> --}}
+                                </div>
+                            @endif
                         <label class="form-label" for="username">Username</label>
-                        <input type="text" id="username" class="form-control form-control-lg" placeholder="Username" name="username"/>
+                        <input type="text" id="username" class="form-control form-control-lg" placeholder="Username" name="username" required="required" autofocus>
                         </div>
             
                         <div class="form-outline mb-3 text-start">
                         <label class="form-label" for="typePasswordX-2">Password</label>
-                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" name="password"/>
+                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" name="password" required="required" autofocus>
                         </div>
             
                         <!-- Checkbox -->
@@ -49,9 +57,9 @@
                         <button class="btn btn-primary btn-lg btn-block" style="width:100%;" type="submit">Login</button>
                         <div class="py-2"></div>
                         <hr>
-                        <div class="login-form pt-2">
-                            Don't have an account?<a href="{{ route('register') }}">Register Here</a>
-                        </div>
+                        {{-- <div class="login-form pt-2">
+                            Don't have an account?<a href="">Register Here</a>
+                        </div> --}}
                     </div>
                     </div>
                 </div>

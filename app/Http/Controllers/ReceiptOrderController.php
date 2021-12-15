@@ -44,12 +44,12 @@ class ReceiptOrderController extends Controller
     }
 
     public function getKode(Request $request){
-        $search = $request->search;
+        $searchsku = $request->search;
         $notrans = $request->notrans;
-        if($notrans == null){
-            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound', '=' .$notrans)->limit(10)->get();
+        if($notrans == ''){
+            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->limit(10)->get();
         }else{
-            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound',  'like',  '%'.$notrans)->limit(10)->get();
+            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->where('code_mitem', 'like',  '%' .$searchsku. '%')->limit(10)->get();
         }
 
         $response = array();
