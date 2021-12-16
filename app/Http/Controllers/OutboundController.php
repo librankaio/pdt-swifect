@@ -12,12 +12,12 @@ class OutboundController extends Controller
     }
 
     public function getKode(Request $request){
-        $search = $request->search;
+        $searchsku = $request->search;
         $notrans = $request->notrans;
         if($notrans == null){
             $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('no_toutbound', '=' .$notrans)->limit(10)->get();
         }else{
-            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('no_toutbound',  'like',  '%'.$notrans)->limit(10)->get();
+            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('no_toutbound',  'like',  '%'.$searchsku.'%')->limit(10)->get();
         }
 
         $response = array();

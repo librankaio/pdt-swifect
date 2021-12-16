@@ -170,9 +170,9 @@
                     tempSku = response;
                     console.log("tempSku");
                     console.log(tempSku);
-                    console.log(selTrans);
+                    // console.log(selTrans);
                     return {
-                        results: response
+                        results: tempSku
                     };
                 },
                 cache: true
@@ -220,7 +220,6 @@
             console.log(selTrans);
 
             // Clear SKU form
-            $("#kode").val(null);
             $("#kode").empty();
             $("#kode").append("<option value='0'>--Select Code--</option>");
             $("#nama_sku").val(null);
@@ -246,7 +245,7 @@
             $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
             $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
             $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
-            console.log($("#hdnlokasi").val());
+            // console.log($("#hdnlokasi").val());
             document.getElementById('qty').focus();
         })
 

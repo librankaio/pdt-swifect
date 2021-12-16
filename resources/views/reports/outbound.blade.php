@@ -141,10 +141,12 @@
     var tempLok = [];
     var selectedLok = null;
     var selectedTrans = null;
+    var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
         // #kode = SKU
+        var selTrans = $('#noTrans option:selected').text();
         $("#kode").select2({
             ajax: {
                 url: "{{route('getKodeOut')}}",
@@ -154,7 +156,7 @@
                 data: function (params) {
                     return {
                         _token: CSRF_TOKEN,
-                        search :  params.term, //search term
+                        searchsku :  params.term, //search term
                         notrans: selectedTrans
                     };
                 },
@@ -163,7 +165,7 @@
                     // console.log(JSON.stringify(response));
                     tempSku = response;
                     return {
-                        results: response
+                        results: tempSku
                     };
                 },
                 cache: true
@@ -215,6 +217,10 @@
             $("#kode").append("<option value='0'>--Select Code--</option>");
             $("#nama_sku").val(null);
             $("#sat").val(null);
+            $("#hdnsku").val(null);
+            $("#pallet").val(null);
+            $("#lokasi").empty();
+            $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
             console.log(selectedTrans);
             console.log($( "#noTrans" ).val());
         });
@@ -259,7 +265,7 @@
                 data: function (params) {
                     return {
                         _token: CSRF_TOKEN,
-                        search :  params.term, //search term
+                        searchLok :  params.term, //search term
                         // notrans: selectedTrans
                     };
                 },
@@ -279,7 +285,9 @@
             }
         });
         $("#lokasi").change(function (e) {
-        $("#hdnlokasi").val(tempLok[$("#lokasi").prop("selectedIndex")].text);
+            selectedLok = tempLok[this.value-1].text;
+            console.log(selectedLok);
+            $("#hdnlokasi").val(selectedLok);
         });
         // VALIDATE TRIGGER
         $("#qty").keyup(function(e){
