@@ -99,9 +99,9 @@
                     <?php 
                     if(request()->input('skuhdn') == null){ 
                     ?>
-                        <input type="text" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
                     <?php }else{?>
-                        <input type="text" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
                     <?php } ?>
                     </div>
                     {{-- END Hidden SKU --}}
