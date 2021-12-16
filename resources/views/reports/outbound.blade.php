@@ -157,7 +157,7 @@
                     return {
                         _token: CSRF_TOKEN,
                         searchsku :  params.term, //search term
-                        notrans: selectedTrans
+                        notrans: selTrans
                     };
                 },
                 processResults: function (response) {
@@ -201,7 +201,7 @@
         });
 
         $("#noTrans").change(function (e) {
-            selectedTrans = tempResponse[this.value-1].text;
+            selTrans = tempResponse[this.value-1].text;
             $("#hdntrans").val(tempResponse[this.value-1].text);
             // $("#tglTrans").val(tempResponse[this.value-1].tgl);
             tgl = tempResponse[this.value-1].tgl;
