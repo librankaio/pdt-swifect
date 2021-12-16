@@ -99,9 +99,9 @@
                     <?php 
                     if(request()->input('skuhdn') == null){ 
                     ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="text" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
                     <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="text" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
                     <?php } ?>
                     </div>
                     {{-- END Hidden SKU --}}
@@ -148,7 +148,7 @@
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
         // #kode = SKU
-        // var selTrans = $('#noTrans option:selected').text();
+        var selTrans = $('#noTrans option:selected').text();
         $("#kode").select2({
             ajax: {
                 url: "{{route('getKode')}}",
@@ -172,7 +172,7 @@
                     console.log(tempSku);
                     console.log(selTrans);
                     return {
-                        results: tempSku
+                        results: response
                     };
                 },
                 cache: true
@@ -208,41 +208,44 @@
         });
         // noTrans = No Transaksi
         $("#noTrans").change(function (e) {
-            // selTrans = $('#noTrans option:selected').text();
-            // selectedTrans = tempResponse[this.value-1].text;
             selTrans = tempResponse[this.value-1].text;
             $("#hdntrans").val(tempResponse[this.value-1].text);
-            // $("#tglTrans").val(tempResponse[this.value-1].tgl);
             tgl = tempResponse[this.value-1].tgl;
-            // console.log(tgl);
             date = new Date(tgl).toLocaleDateString('en-GB');
             $("#tglTrans").val(date);
             $("#pemilik").val(tempResponse[this.value-1].nama);
             $("#note").val(tempResponse[this.value-1].note);
             document.getElementById('qty').focus();
+            console.log($("#noTrans").prop("selectedIndex"));
+            console.log(selTrans);
 
             // Clear SKU form
+            $("#kode").val(null);
             $("#kode").empty();
             $("#kode").append("<option value='0'>--Select Code--</option>");
             $("#nama_sku").val(null);
             $("#sat").val(null);
+            $("#hdnsku").val(null);
             $("#pallet").val(null);
             $("#lokasi").empty();
             $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
-            console.log(selectedTrans);
-            // console.log($( "#noTrans" ).val());
         });
         // SKU
         $("#kode").change(function (e) {
-            // console.log($("#kode").prop("selectedIndex"))
-            selectedSKU = tempSku[this.value-1].text;
-            console.log(selectedSKU);
+            // Clear SKU form
+            // $(this).empty();
+            // $("#kode").append("<option value='0'>--Select Code--</option>");
+            console.log($("#kode").prop("selectedIndex"));
+            // console.log(selsku);
+            console.log(tempSku);
+            // $("#nama_sku").val(tempSku[this.value-1].nama);
+            // $("#sat").val(tempSku[this.value-1].sat);
+            // $("#pallet").val(tempSku[this.value-1].pallet);
+            // $("#hdnsku").val(tempSku[this.value-1].text);
             $("#nama_sku").val(tempSku[$("#kode").prop("selectedIndex") - 1].nama);
             $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
-            // $("#lokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
             $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
             $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
-            // $("#hdnlokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
             console.log($("#hdnlokasi").val());
             document.getElementById('qty').focus();
         })
@@ -256,7 +259,6 @@
         document.getElementById('nama_sku').value = "";
         document.getElementById('qty').value = "";
         document.getElementById('sat').value = "";
-        // document.getElementById('lokasi').value = "";
         $("#lokasi").empty();
         $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
         document.getElementById('pallet').value = "";
