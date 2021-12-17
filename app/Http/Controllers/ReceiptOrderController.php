@@ -90,9 +90,9 @@ class ReceiptOrderController extends Controller
     public function getLokasi(Request $request){
         $searchLok = $request->searchLok;
         if($searchLok == ''){
-            $kodes = DB::table('mwhse')->orderby('id','asc')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('mwhse')->orderby('id','asc')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -114,7 +114,7 @@ class ReceiptOrderController extends Controller
         $lokasi = $request->input('hdnlokasi');
         $qty = $request->input('qty');
         // dd($request->all());
-        DB::table('tinboundd')->where('no_tinbound','=',$notrans)->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
+        DB::table('tinboundd')->where('no_tinbound','=',$notrans)->where('stat','=','1')->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
         
         // return redirect('/dashboard');
 

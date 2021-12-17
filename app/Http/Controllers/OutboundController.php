@@ -15,9 +15,9 @@ class OutboundController extends Controller
         $searchsku = $request->search;
         $notrans = $request->notrans;
         if($notrans == null){
-            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('no_toutbound', '=' .$notrans)->limit(10)->get();
+            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('stat','=','1')->where('no_toutbound', '=' .$notrans)->limit(10)->get();
         }else{
-            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('no_toutbound',  'like',  '%'.$searchsku.'%')->limit(10)->get();
+            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('stat','=','1')->where('no_toutbound',  'like',  '%'.$searchsku.'%')->limit(10)->get();
         }
 
         $response = array();
@@ -37,9 +37,9 @@ class OutboundController extends Controller
     public function getNoTrans(Request $request){
         $searchTrans = $request->searchTrans;
         if($searchTrans == ''){
-            $kodes = DB::table('toutbound')->orderby('no','asc')->limit(10)->get();
+            $kodes = DB::table('toutbound')->orderby('no','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('toutbound')->orderby('no','asc')->where('no', 'like',  '%' .$searchTrans. '%')->limit(10)->get();
+            $kodes = DB::table('toutbound')->orderby('no','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchTrans. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -58,9 +58,9 @@ class OutboundController extends Controller
     public function getLokasi(Request $request){
         $searchLok = $request->searchLok;
         if($searchLok == ''){
-            $kodes = DB::table('mwhse')->orderby('id','asc')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('mwhse')->orderby('id','asc')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -81,7 +81,7 @@ class OutboundController extends Controller
         $lokasi = $request->input('hdnlokasi');
         $qty = $request->input('qty');
         // dd($request->all());
-        DB::table('toutboundd')->where('no_toutbound','=',$notrans)->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
+        DB::table('toutboundd')->where('no_toutbound','=',$notrans)->where('stat','=','1')->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
         
         // return redirect('/dashboard');
         return view('reports.outbound');

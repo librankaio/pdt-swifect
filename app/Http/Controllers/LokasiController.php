@@ -14,9 +14,9 @@ class LokasiController extends Controller
     public function getSKU(Request $request){
         $searchsku = $request->searchsku;
         if($searchsku == ''){
-            $kodes = DB::table('mitem')->orderBy('code_mitem','asc')->limit(10)->get();
+            $kodes = DB::table('mitem')->orderBy('code_mitem','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('mitem')->orderBy('code_mitem','asc')->where('code_mitem', 'like',  '%' .$searchsku. '%')->limit(10)->get();
+            $kodes = DB::table('mitem')->orderBy('code_mitem','asc')->where('stat','=','1')->where('code_mitem', 'like',  '%' .$searchsku. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -34,9 +34,9 @@ class LokasiController extends Controller
     public function getInbound(Request $request){
         $searchindbound = $request->searchindbound;
         if($searchindbound == ''){
-            $kodes = DB::table('tinbound')->orderBy('id','asc')->limit(10)->get();
+            $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('tinbound')->orderBy('id','asc')->where('no', 'like',  '%' .$searchindbound. '%')->limit(10)->get();
+            $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchindbound. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -53,9 +53,9 @@ class LokasiController extends Controller
     public function getLokasi(Request $request){
         $searchlok = $request->searchlok;
         if($searchlok == ''){
-            $kodes = DB::table('mwhse')->orderBy('id','asc')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderBy('id','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('mwhse')->orderBy('id','asc')->where('code_mwhse', 'like',  '%' .$searchlok. '%')->limit(10)->get();
+            $kodes = DB::table('mwhse')->orderBy('id','asc')->where('stat','=','1')->where('code_mwhse', 'like',  '%' .$searchlok. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -76,7 +76,7 @@ class LokasiController extends Controller
         $lokasi = $request->input('hdnlokasi');
         $qty = $request->input('quantity');
         // dd($request->all());
-        DB::table('tinboundd')->where('code_mitem','=',$sku)->where('no_tinbound','=',$noinbound)->update(['code_mwhse'=> $lokasi,'pallet'=>$pallet]);
+        DB::table('tinboundd')->where('code_mitem','=',$sku)->where('stat','=','1')->where('no_tinbound','=',$noinbound)->update(['code_mwhse'=> $lokasi,'pallet'=>$pallet]);
         
         return redirect('/lokasi');
 
