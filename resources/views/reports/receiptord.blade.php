@@ -255,6 +255,7 @@
         e.preventDefault();
         $("#noTrans").empty();
         $("#noTrans").append("<option value='0'>--Select Code--</option>");
+        selTrans = $('#noTrans option:selected').text("--Select Code--");
         $("#kode").empty();
         $("#kode").append("<option value='0'>--Select Code--</option>");
         document.getElementById('nama_sku').value = "";

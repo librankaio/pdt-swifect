@@ -76,7 +76,7 @@ class LokasiController extends Controller
         $lokasi = $request->input('hdnlokasi');
         $qty = $request->input('quantity');
         // dd($request->all());
-        DB::table('tinboundd')->where('code_mitem','=',$sku)->where('no_tinbound','=',$noinbound)->update(['code_mwhse'=> $lokasi,'pallet'=>$pallet,"qty"=>$qty]);
+        DB::table('tinboundd')->where('code_mitem','=',$sku)->where('no_tinbound','=',$noinbound)->update(['code_mwhse'=> $lokasi,'pallet'=>$pallet]);
         
         return redirect('/lokasi');
 

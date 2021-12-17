@@ -47,9 +47,9 @@ class ReceiptOrderController extends Controller
         $searchsku = $request->search;
         $notrans = $request->notrans;
         if($notrans == ''){
-            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->limit(10)->get();
+            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->where('code_mitem', 'like',  '%' .$searchsku. '%')->limit(10)->get();
+            $kodes = DB::table('tinboundd')->orderBy('code_mitem','asc')->where('no_tinbound','=',$notrans)->where('stat','=','1')->where('code_mitem', 'like',  '%' .$searchsku. '%')->limit(10)->get();
         }
 
         $response = array();
@@ -69,9 +69,9 @@ class ReceiptOrderController extends Controller
      public function getNoTrans(Request $request){
         $searchTrans = $request->searchTrans;
         if($searchTrans == ''){
-            $kodes = DB::table('tinbound')->orderby('no','asc')->limit(10)->get();
+            $kodes = DB::table('tinbound')->orderby('no','asc')->where('stat','=','1')->limit(10)->get();
         }else{
-            $kodes = DB::table('tinbound')->orderby('no','asc')->where('no', 'like',  '%' .$searchTrans. '%')->limit(10)->get();
+            $kodes = DB::table('tinbound')->orderby('no','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchTrans. '%')->limit(10)->get();
         }
 
         $response = array();

@@ -68,7 +68,7 @@
                 <div class="col-sm-6">
                     <div class="my-2">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="text" class="form-control mb-2" id="quantity" value="" name="quantity">
+                    <input type="text" class="form-control mb-2" id="quantity" value="" aria-label="readonly input example" name="quantity" readonly>
                     <label for="sat" class="form-label">Satuan</label>
                     <input type="text" class="form-control mb-2" id="sat" value="" aria-label="readonly input example" readonly>
                     <label for="noinbound" class="form-label">No Inbound / Transaction</label>
