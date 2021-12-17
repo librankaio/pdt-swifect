@@ -253,6 +253,8 @@
     // #finish = Reset all fields
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
+        $("#noTrans").empty();
+        $("#noTrans").append("<option value='0'>--Select Code--</option>");
         $("#kode").empty();
         $("#kode").append("<option value='0'>--Select Code--</option>");
         document.getElementById('nama_sku').value = "";
@@ -261,8 +263,6 @@
         $("#lokasi").empty();
         $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
         document.getElementById('pallet').value = "";
-        $("#noTrans").empty();
-        $("#noTrans").append("<option value='0'>--Select Code--</option>");
         document.getElementById('tglTrans').value = "";
         document.getElementById('note').value = "";
         document.getElementById('pemilik').value = "";

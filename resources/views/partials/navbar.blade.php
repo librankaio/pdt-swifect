@@ -13,6 +13,9 @@
                 <a class="nav-link active" aria-current="page" href="{{ 'outbound' }}"><i class="fas fa-sign-out-alt"></i><span> Outbound</span></a>
             </li>
             <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ 'lokasi' }}"><i class="fas fa-map-marker-alt"></i><span> Lokasi</span></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ 'logout' }}"><i class="fas fa-power-off"></i><span> Logout</span></a>
             </li>
             <!-- <li class="nav-item">

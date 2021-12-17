@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\OutboundController;
 use App\Http\Controllers\ReceiptOrderController;
 use App\Http\Controllers\RegisterController;
@@ -51,6 +52,17 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
     // END OUTBOUND
+
+    // LOKASI
+    Route::get('/lokasi',[LokasiController::class, 'index'])->name('index');
+
+    Route::post('getsku',[LokasiController::class, 'getSKU'])->name('getsku');
+
+    Route::post('getinbound',[LokasiController::class, 'getInbound'])->name('getinbound');
+
+    Route::post('getlokasi',[LokasiController::class, 'getLokasi'])->name('getlokasi');
+
+    Route::get('updlokasi',[LokasiController::class, 'updLokasi'])->name('updlokasi');
 });
 
 // // INBOUND
