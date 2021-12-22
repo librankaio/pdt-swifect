@@ -28,9 +28,9 @@
                             <?php 
                             if(request()->input('hdnnoinbound') == null){ 
                             ?>
-                                <input type="text" class="form-control mb-2" id="hdnnoinbound" value="" name="hdnnoinbound" aria-label="readonly input example" readonly>
+                                <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="" name="hdnnoinbound" aria-label="readonly input example" readonly>
                             <?php }else{?>
-                                <input type="text" class="form-control mb-2" id="hdnnoinbound" value="{{ $_GET['hdnnoinbound'] }}" name="hdnnoinbound" aria-label="readonly input example" readonly>
+                                <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="{{ $_GET['hdnnoinbound'] }}" name="hdnnoinbound" aria-label="readonly input example" readonly>
                             <?php } ?>
                             {{-- END Hidden No Inbound --}}
                         </div>
@@ -99,9 +99,9 @@
                     <?php 
                     if(request()->input('hdnpallet') == null){ 
                     ?>
-                        <input type="text" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
                     <?php }else{?>
-                        <input type="text" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
                     <?php } ?>
                     </div>
                     {{-- END Hidden SKU --}}
