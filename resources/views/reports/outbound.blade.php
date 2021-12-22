@@ -242,7 +242,7 @@
         e.preventDefault();
         $("#kode").empty();
         $("#kode").append("<option value='0'>--Select Code--</option>");
-        selTrans = $('#noTrans option:selected').text("--Select Code--")
+        selTrans = $('#noTrans option:selected').text("--Select Code--");
         document.getElementById('nama_sku').value = "";
         document.getElementById('qty').value = "";
         document.getElementById('sat').value = "";

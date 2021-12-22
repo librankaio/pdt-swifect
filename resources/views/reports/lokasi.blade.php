@@ -221,13 +221,6 @@
             $("#hdnlok").val(selectedLok);
             // $("#hdnlok").val(tempLok[this.value-1].text);
         });
-        // VALIDATE TRIGGER
-        $("#quantity").keyup(function(e){
-            if (/\D/g.test(this.value)){
-                // Filter non-digits from input value.
-                this.value = this.value.replace(/\D/g, '');
-            }
-        });
     });
 </script>
 {{-- END Bot Script --}}

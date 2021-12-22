@@ -12,27 +12,27 @@
                     <div class="col-sm-6">
                         <div class="my-2">
                             
-                            <label for="noTrans" class="form-label">No Trans</label>
+                            <label for="noinbound" class="form-label">No Inbound</label>
                             <?php 
-                            if(request()->input('noTrans') == 0){ 
+                            if(request()->input('noinbound') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noTrans" onchange="" name="noTrans">
-                                <option value=''>--Select No Trans--</option>
+                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
+                                <option value=''>--Select No Inbound--</option>
                             </select>
                             <?php }else{?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noTrans" onchange="" name="noTrans">
-                                <option value='{{ $_GET['noTrans'] }}'>{{ $_GET['hdntrans'] }}</option>
+                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
+                                <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['hdnnoinbound'] }}</option>
                             </select>
                             <?php } ?>
-                            {{-- Hidden Trans --}}
+                            {{-- Hidden No Inbound --}}
                             <?php 
-                            if(request()->input('hdntrans') == null){ 
+                            if(request()->input('hdnnoinbound') == null){ 
                             ?>
-                                <input type="hidden" class="form-control mb-2" id="hdntrans" value="" name="hdntrans" aria-label="readonly input example" readonly>
+                                <input type="text" class="form-control mb-2" id="hdnnoinbound" value="" name="hdnnoinbound" aria-label="readonly input example" readonly>
                             <?php }else{?>
-                                <input type="hidden" class="form-control mb-2" id="hdntrans" value="{{ $_GET['hdntrans'] }}" name="hdntrans" aria-label="readonly input example" readonly>
+                                <input type="text" class="form-control mb-2" id="hdnnoinbound" value="{{ $_GET['hdnnoinbound'] }}" name="hdnnoinbound" aria-label="readonly input example" readonly>
                             <?php } ?>
-                            {{-- END Hidden Trans --}}
+                            {{-- END Hidden No Inbound --}}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -56,7 +56,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="pemilik" class="form-label">Dari / Pemilik</label>
+                            <label for="pemilik" class="form-label">Owner / Pemilik</label>
                             <?php 
                             if(request()->input('pemilik') == null){ 
                             ?>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="note" class="form-label">Catatan</label>
+                            <label for="note" class="form-label">Catatan / Notes</label>
                             <?php 
                             if(request()->input('note') == null){ 
                             ?>
@@ -89,47 +89,55 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
-                    <label for="sku" class="form-label">SKU</label>
+                    <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
-                        <select class="form-control" id='kode'>
-                            <option value='0'>--Select Code--</option>
+                        <select class="form-control" id='palletid'>
+                            <option value='0'>--Select Pallet ID--</option>
+                        </select>
+                    </div>
+                    {{-- Hidden PalletID --}}
+                    <?php 
+                    if(request()->input('hdnpallet') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
+                    <?php } ?>
+                    </div>
+                    {{-- END Hidden SKU --}}
+                    <label for="nopo" class="form-label">No PO</label>
+                    <div class="search-select-box">
+                        <select class="form-control" id='nopo'>
+                            <option value='0'>--Select No PO--</option>
                         </select>
                     </div>
                     {{-- Hidden SKU --}}
                     <?php 
-                    if(request()->input('skuhdn') == null){ 
+                    if(request()->input('hdnpo') == null){ 
                     ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnpo" name="hdnpo" value="" aria-label="readonly input example" readonly>
                     <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
+                        <input type="hidden" class="form-control mb-2" id="hdnpo" name="hdnpo" value="" aria-label="readonly input example" readonly>
                     <?php } ?>
-                    </div>
-                    {{-- END Hidden SKU --}}
-                    <label for="nama" class="form-label">Nama / Deskripsi</label>
-                    <input type="text" class="form-control mb-2" id="nama_sku" value="" aria-label="readonly input example" readonly>
-                    <label for="qty" class="form-label">Quantity</label>
-                    <input type="text" class="form-control mb-2" id="qty" name="qty">
-                    <label for="sat" class="form-label">Satuan</label>
-                    <input type="text" class="form-control mb-2" id="sat" value="" aria-label="readonly input example" readonly>
-                    <label for="lokasi" class="form-label">Lokasi</label>
-                    <div class="search-select-box">
-                        <select class="form-control" id='lokasi'>
-                            <option value='0'>--Select Lokasi--</option>
-                        </select>
-                        {{-- Hidden Lokasi --}}
-                        <input type="hidden" class="form-control mb-2" id="hdnlokasi" name="hdnlokasi" value="" aria-label="readonly input example" readonly>
-                        {{-- END Hidden Lokasi --}}
-                    </div>
-                    <label for="pallet" class="form-label mt-2">Pallet</label>
-                    <input type="text" class="form-control mb-2" id="pallet" name="pallet">
-                    <div class="row">
-                        <div class="col-sm-12 text-end mb-4">
-                            <form action="">                                
-                                <button type="submit" class="btn btn-primary" id="ok" formaction="{{ route('updSKU') }}">OK</button>
-                                <a type="button" class="btn btn-primary" id="finish">Finish</a>
-                            </form>
+                        <label for="nama_sku" class="form-label mt-2">SKU</label>
+                        <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
+                        <label for="desc" class="form-label">Description</label>
+                        <input type="text" class="form-control mb-2" id="desc"   value="" aria-label="readonly input example" readonly>
+                        <label for="qtycrtn" class="form-label">Total QTY Carton</label>
+                        <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
+                        <label for="crtnid" class="form-label">Carton ID</label>
+                        <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example">
+                        <label for="sat" class="form-label">Satuan</label>
+                        <input type="text" class="form-control mb-2" id="sat" value="" name="sat"  aria-label="readonly input example" readonly>
+                        <div class="row">
+                            <div class="col-sm-12 text-end mb-4">
+                                <form action="">                                
+                                    <button type="submit" class="btn btn-primary" id="ok" formaction="{{ route('insertQty') }}">Confirm QTY</button>
+                                    <a type="button" class="btn btn-primary" id="finish">Finish</a>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </div>                    
                     </div>
                 </div>
             </div>
@@ -139,167 +147,142 @@
 {{-- Bot Script --}}
 <script type="text/javascript">
     var tempResponse = [];
-    var tempSku= [];
+    var tempInbound= [];
     var tempLok = [];
+    var tempPallet = [];
     var selectedLok = null;
     var selectedTrans = null;
-    var selectedSKU = null;
+    // var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
         // #kode = SKU
-        var selTrans = $('#noTrans option:selected').text();
-        $("#kode").select2({
+        var selInbound = $('#noinbound option:selected').text();
+        $("#noinbound").select2({
             ajax: {
-                url: "{{route('getKode')}}",
+                url: "{{route('getInbound')}}",
                 type: "post",
                 dataType: "json",
                 delay: 250,
                 data: function (params) {
                     return {
                         _token: CSRF_TOKEN,
-                        searchsku :  params.term, //search term
+                        searchinbound :  params.term, //search term
                         // notrans: selectedTrans
-                        notrans: selTrans
+                        // notrans: selInbound
                     };
                 },
                 processResults: function (response) {
                     // console.log(selectedTrans);
                     // console.log("response");
                     // console.log(JSON.stringify(response));
-                    tempSku = response;
-                    console.log("tempSku");
-                    console.log(tempSku);
+                    tempInbound = response;
+                    console.log("tempInbound");
+                    console.log(tempInbound);
                     // console.log(selTrans);
                     return {
-                        results: tempSku
+                        results: tempInbound
                     };
                 },
                 cache: true
             }
         });
-        $("#noTrans").select2({
+        // Pallet
+        $("#palletid").select2({
             ajax: {
-                url: "{{route('getNoTrans')}}",
+                url: "{{route('getPallet')}}",
                 type: "post",
                 dataType: "json",
                 delay: 250,
                 data: function (params) {
-                    // console.log(JSON.stringify(params));
                     return {
                         _token: CSRF_TOKEN,
-                        searchTrans : params.term //search term
+                        searchpallet :  params.term, //search term
                     };
                 },
                 processResults: function (response) {
+                    // console.log(selectedTrans);
                     // console.log("response");
-                    // console.log(response);
-                    // tempResponse = response;
-                    // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
-                    tempResponse = response
-                    console.log("tempResponse");
-                    console.log(tempResponse)
+                    // console.log(JSON.stringify(response));
+                    tempPallet = response;
+                    console.log("tempPallet");
+                    console.log(tempPallet);
+                    // console.log(selTrans);
                     return {
-                        results: tempResponse
+                        results: tempPallet
                     };
                 },
                 cache: true
             }
         });
-        // noTrans = No Transaksi
-        $("#noTrans").change(function (e) {
-            selTrans = tempResponse[this.value-1].text;
-            $("#hdntrans").val(tempResponse[this.value-1].text);
-            tgl = tempResponse[this.value-1].tgl;
+        // No PO
+        $("#nopo").select2({
+            ajax: {
+                url: "{{route('getPo')}}",
+                type: "post",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return {
+                        _token: CSRF_TOKEN,
+                        searchpo :  params.term, //search term
+                    };
+                },
+                processResults: function (response) {
+                    // console.log(selectedTrans);
+                    // console.log("response");
+                    // console.log(JSON.stringify(response));
+                    tempPo = response;
+                    console.log("tempPallet");
+                    console.log(tempPallet);
+                    // console.log(selTrans);
+                    return {
+                        results: tempPo
+                    };
+                },
+                cache: true
+            }
+        });
+        // noInbound
+        $("#noinbound").change(function (e) {
+            console.log($("#noinbound").prop("selectedIndex"));
+            console.log(tempInbound);
+            $("#hdnnoinbound").val(tempInbound[this.value-1].text);
+            tgl = tempInbound[this.value-1].tanggal;
             date = new Date(tgl).toLocaleDateString('en-GB');
             $("#tglTrans").val(date);
-            $("#pemilik").val(tempResponse[this.value-1].nama);
-            $("#note").val(tempResponse[this.value-1].note);
-            document.getElementById('qty').focus();
-            console.log($("#noTrans").prop("selectedIndex"));
-            console.log(selTrans);
-
-            // Clear SKU form
-            $("#kode").empty();
-            $("#kode").append("<option value='0'>--Select Code--</option>");
-            $("#nama_sku").val(null);
-            $("#sat").val(null);
-            $("#hdnsku").val(null);
-            $("#pallet").val(null);
-            $("#lokasi").empty();
-            $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
+            $("#pemilik").val(tempInbound[this.value-1].pemilik);
+            $("#note").val(tempInbound[this.value-1].note);
         });
-        // SKU
-        $("#kode").change(function (e) {
-            // Clear SKU form
-            // $(this).empty();
-            // $("#kode").append("<option value='0'>--Select Code--</option>");
-            console.log($("#kode").prop("selectedIndex"));
-            // console.log(selsku);
-            console.log(tempSku);
-            // $("#nama_sku").val(tempSku[this.value-1].nama);
-            // $("#sat").val(tempSku[this.value-1].sat);
-            // $("#pallet").val(tempSku[this.value-1].pallet);
-            // $("#hdnsku").val(tempSku[this.value-1].text);
-            $("#nama_sku").val(tempSku[$("#kode").prop("selectedIndex") - 1].nama);
-            $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
-            $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
-            $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
-            // console.log($("#hdnlokasi").val());
-            document.getElementById('qty').focus();
-        })
+        $("#palletid").change(function (e) {
+            $("#hdnpallet").val(tempPallet[this.value-1].text);
+        });
+        $("#nopo").change(function (e) {
+            $("#hdnpo").val(tempPo[this.value-1].text);
+            $("#nama_sku").val(tempPo[this.value-1].sku);
+            $("#desc").val(tempPo[this.value-1].desc);
+            $("#qtycrtn").val(tempPo[this.value-1].qty);
+            $("#sat").val(tempPo[this.value-1].sat);
+        });
 
     });
     // #finish = Reset all fields
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
-        $("#noTrans").empty();
-        $("#noTrans").append("<option value='0'>--Select Code--</option>");
-        selTrans = $('#noTrans option:selected').text("--Select Code--");
-        $("#kode").empty();
-        $("#kode").append("<option value='0'>--Select Code--</option>");
-        document.getElementById('nama_sku').value = "";
-        document.getElementById('qty').value = "";
-        document.getElementById('sat').value = "";
-        $("#lokasi").empty();
-        $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
-        document.getElementById('pallet').value = "";
+        $("#noinbound").empty();
+        $("#noinbound").append("<option value='0'>--Select No Inbound--</option>");
         document.getElementById('tglTrans').value = "";
-        document.getElementById('note').value = "";
         document.getElementById('pemilik').value = "";
-    });
-    // #lokasi = lokasi
-    $("#lokasi").select2({
-            ajax: {
-                url: "{{route('getLokasi')}}",
-                type: "post",
-                dataType: "json",
-                delay: 50,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchLok :  params.term //search term
-                        // searchLok: selectedLok
-                    };
-                },
-                processResults: function (response) {
-                    console.log("response");
-                    console.log(JSON.stringify(response));
-                    tempLok = response;
-                    // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
-                    // console.log(tempResponse);
-                    console.log(tempLok)
-                    return {
-                        results: tempLok
-                    };
-                },
-                cache: true
-            }
-        });
-    $("#lokasi").change(function (e) {
-        selectedLok = tempLok[this.value-1].text;
-        console.log(selectedLok);
-        $("#hdnlokasi").val(selectedLok);
+        document.getElementById('note').value = "";
+        $("#palletid").empty();
+        $("#palletid").append("<option value='0'>--Select Pallet ID--</option>");
+        $("#nopo").empty();
+        $("#nopo").append("<option value='0'>--Select No PO--</option>");
+        document.getElementById('nama_sku').value = "";
+        document.getElementById('desc').value = "";
+        document.getElementById('qtycrtn').value = "";
+        document.getElementById('crtnid').value = "";
+        document.getElementById('sat').value = "";
     });
     // VALIDATE TRIGGER
     $("#qty").keyup(function(e){

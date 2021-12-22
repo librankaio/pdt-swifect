@@ -32,13 +32,13 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
 
-    Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
+    Route::post('/getInbound',[ReceiptOrderController::class, 'getInbound'])->name('getInbound');
 
-    Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
+    Route::post('/getPallet',[ReceiptOrderController::class, 'getPallet'])->name('getPallet');
 
-    Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
+    Route::post('/getPo',[ReceiptOrderController::class, 'getPo'])->name('getPo');
 
-    Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
+    Route::get('/insertQty',[ReceiptOrderController::class, 'insertQty'])->name('insertQty');
     // END INBOUND
 
     // OUTBOUND
