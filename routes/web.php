@@ -38,6 +38,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getPo',[ReceiptOrderController::class, 'getPo'])->name('getPo');
 
+    Route::post('/getCQty',[ReceiptOrderController::class, 'getCQty'])->name('getCQty');
+
     Route::get('/insertQty',[ReceiptOrderController::class, 'insertQty'])->name('insertQty');
     // END INBOUND
 

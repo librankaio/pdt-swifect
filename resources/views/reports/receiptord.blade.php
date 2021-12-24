@@ -16,11 +16,11 @@
                             <?php 
                             if(request()->input('noinbound') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
+                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" name="noinbound">
                                 <option value=''>--Select No Inbound--</option>
                             </select>
                             <?php }else{?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
+                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" name="noinbound">
                                 <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['hdnnoinbound'] }}</option>
                             </select>
                             <?php } ?>
@@ -107,7 +107,7 @@
                     {{-- END Hidden SKU --}}
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
-                        <select class="form-control" id='nopo'>
+                        <select class="form-control" id='nopo' onchange="countItem()">
                             <option value='0'>--Select No PO--</option>
                         </select>
                     </div>
@@ -123,6 +123,8 @@
                         <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
                         <label for="desc" class="form-label">Description</label>
                         <input type="text" class="form-control mb-2" id="desc"   value="" aria-label="readonly input example" readonly>
+                        <label for="qtycount" class="form-label">Quantity Count</label>
+                        <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
                         <label for="qtycrtn" class="form-label">Total QTY Carton</label>
                         <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
                         <label for="crtnid" class="form-label">Carton ID</label>
@@ -146,6 +148,7 @@
 </form>
 {{-- Bot Script --}}
 <script type="text/javascript">
+    var tempKode = [];
     var tempResponse = [];
     var tempInbound= [];
     var tempLok = [];
@@ -155,6 +158,10 @@
     // var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    var kodes = {!!  $kodes  !!};
+    console.log("Kodes");
+    console.log(kodes);
+    console.log(kodes);
     $(document).ready(function(){
         // #kode = SKU
         var selInbound = $('#noinbound option:selected').text();
@@ -247,7 +254,7 @@
         $("#noinbound").change(function (e) {
             console.log($("#noinbound").prop("selectedIndex"));
             console.log(tempInbound);
-            $("#hdnnoinbound").val(tempInbound[this.value-1].text);
+            // $("#hdnnoinbound").val(tempInbound[this.value-1].text);
             tgl = tempInbound[this.value-1].tanggal;
             date = new Date(tgl).toLocaleDateString('en-GB');
             $("#tglTrans").val(date);
@@ -258,14 +265,41 @@
             $("#hdnpallet").val(tempPallet[this.value-1].text);
         });
         $("#nopo").change(function (e) {
+            noinbound = $('#noinbound option:selected').text();
+            nopo = $("#hdnpo").val();
             $("#hdnpo").val(tempPo[this.value-1].text);
             $("#nama_sku").val(tempPo[this.value-1].sku);
+            
+            qtyint = tempPo[this.value-1].qty;
             $("#desc").val(tempPo[this.value-1].desc);
-            $("#qtycrtn").val(tempPo[this.value-1].qty);
+            $("#qtycrtn").val(parseInt(qtyint));
             $("#sat").val(tempPo[this.value-1].sat);
+            // var kodes = {{  $kodes  }};
+            // console.log("Kodes");
+            // console.log(kodes);
+            // console.log(kodes)
         });
-
     });
+    function countItem(){
+            result = null;
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('getCQty')}}",
+                type: 'post',
+                dataType: 'json',
+                // data: response,
+                success:function(response){
+                    console.log("Count");
+                    console.log(response);
+                    tempKode = response
+                    return {
+                        result: tempKode
+                    };
+                },
+            });
+        }
     // #finish = Reset all fields
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
@@ -315,5 +349,6 @@
             return false;
         }
     });
+    
 </script>
 @endsection

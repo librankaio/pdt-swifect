@@ -7,11 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\Console\Input\Input;
+use JavaScript;
 
 class ReceiptOrderController extends Controller
 {
-    public function index(){
-        return view('reports.receiptord');
+    public function index(Request $request){
+        $noinbound = $request->noinbound;
+        $nopo = $request->nopo;
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
+        
+        return view('reports.receiptord',[
+            'kodes'=>$kodes]);
     }
 
     public function show(Request $request){
@@ -102,6 +108,26 @@ class ReceiptOrderController extends Controller
             );
         }
         return response()->json($response);
+    }
+
+    public function getCQty(Request $request){
+        $noinbound = $request->input('hdnnoinbound');
+        $nopo = $request->input('hdnpo');
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('noinbound','=',$noinbound)->get();
+        // if($searchpallet == ''){
+            
+        // }else{
+        //     $kodes = DB::table('tinboundid')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
+        // }
+        
+        $response = array();
+        foreach($kodes as $kode){
+            $response[] = array(
+                "id"=>$kode->id,
+            );
+        }
+        return response()->json($response);
+        // return json_encode($response);
     }
 
     public function insertQty(Request $request){
