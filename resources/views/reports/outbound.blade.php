@@ -234,7 +234,7 @@
             $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
             $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
             document.getElementById('qty').focus();
-        })
+        });
 
     });
     // #finish = Reset all fields

@@ -36,6 +36,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getPallet',[ReceiptOrderController::class, 'getPallet'])->name('getPallet');
 
+    Route::post('/getPalletId',[ReceiptOrderController::class, 'getPalletId'])->name('getPalletId');
+
     Route::post('/getPo',[ReceiptOrderController::class, 'getPo'])->name('getPo');
 
     Route::post('/getCQty',[ReceiptOrderController::class, 'getCQty'])->name('getCQty');

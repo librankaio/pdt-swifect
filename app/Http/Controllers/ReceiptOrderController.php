@@ -15,9 +15,22 @@ class ReceiptOrderController extends Controller
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
         $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
+
+        $pallet = DB::table('mpallet')->get();
+        
+        $nopo = DB::table('tinboundd')->get();
+
+        $inbound = DB::table('tinbound')->get();
+
+        $item_r = DB::table('tinboundd')->get();
+
         
         return view('reports.receiptord',[
-            'kodes'=>$kodes]);
+            'kodes'=>$kodes,
+            'item_r'=>$item_r,
+            'pallet'=>$pallet,
+            'nopo'=>$nopo,
+            'inbound'=>$inbound]);
     }
 
     public function show(Request $request){
@@ -49,25 +62,27 @@ class ReceiptOrderController extends Controller
         }
     }
 
-    public function getInbound(Request $request){
-        $searchinbound = $request->searchinbound;
-        if($searchinbound == ''){
-            $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->limit(10)->get();
-        }else{
-            $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchinbound. '%')->limit(10)->get();
-        }
+    public function getInbound(){
+        $inbound = DB::table('tinbound')->get();
+        // $searchinbound = $request->searchinbound;
+        // if($searchinbound == ''){
+        //     $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->limit(10)->get();
+        // }else{
+        //     $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchinbound. '%')->limit(10)->get();
+        // }
 
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->no,
-                "tanggal"=>$kode->tdate,
-                "pemilik"=>$kode->name_mbp,
-                "note"=>$kode->note,
-            );
-        }
-        return response()->json($response);
+        // $response = array();
+        // foreach($kodes as $kode){
+        //     $response[] = array(
+        //         "id"=>$kode->id,
+        //         "text"=>$kode->no,
+        //         "tanggal"=>$kode->tdate,
+        //         "pemilik"=>$kode->name_mbp,
+        //         "note"=>$kode->note,
+        //     );
+        // }
+        // return response()->json($response);
+        return json_encode($inbound);
     }
 
     public function getPallet(Request $request){
@@ -88,46 +103,62 @@ class ReceiptOrderController extends Controller
         return response()->json($response);
     }
 
-    public function getPo(Request $request){
-        $searchpallet = $request->searchpallet;
-        if($searchpallet == ''){
-            $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
-        }else{
-            $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
-        }
+    public function getPalletR(Request $request){
+        $id = $request->input('id');
+        $item = $request->get('nopo');
+        $nopo_r = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->where('id','=',$id)->get();
+        return $nopo_r;
+    }
 
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->nopo,
-                "sku"=>$kode->code_mitem,
-                "desc"=>$kode->name_mitem,
-                "qty"=>$kode->qty,
-                "sat"=>$kode->code_muom,
-            );
-        }
-        return response()->json($response);
+    public function getPalletId(Request $request){
+        $id = $request->input('id');
+        $item_r = DB::table('mpallet')->get();
+        return json_encode($item_r);
+    }
+    // public function getPo(Request $request){
+    //     $searchpo = $request->searchpallet;
+    //     if($searchpo == ''){
+    //         $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
+    //     }else{
+    //         $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->where('no_tinbound', 'like',  '%' .$searchpo. '%')->limit(10)->get();
+    //     }
+
+    //     $response = array();
+    //     foreach($kodes as $kode){
+    //         $response[] = array(
+    //             "id"=>$kode->id,
+    //             "text"=>$kode->nopo,
+    //             "sku"=>$kode->code_mitem,
+    //             "desc"=>$kode->name_mitem,
+    //             "qty"=>$kode->qty,
+    //             "sat"=>$kode->code_muom,
+    //         );
+    //     }
+    //     return response()->json($response);
+    // }
+    public function getPoRead(Request $request){
+        $id = $request->input('id');
+        $item = $request->get('nopo');
+        $nopo_r = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->where('id','=',$id)->get();
+        return $nopo_r;
+    }
+    public function getPo(Request $request){
+        $id = $request->input('id');
+        $item_r = DB::table('tinboundd')->get();
+        return json_encode($item_r);
     }
 
     public function getCQty(Request $request){
-        $noinbound = $request->input('hdnnoinbound');
-        $nopo = $request->input('hdnpo');
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('noinbound','=',$noinbound)->get();
+        $noinbound = $request->noinbound;
+        $nopo = $request->input('nopo');
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
         // if($searchpallet == ''){
             
         // }else{
         //     $kodes = DB::table('tinboundid')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
         // }
         
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-            );
-        }
-        return response()->json($response);
-        // return json_encode($response);
+        return json_encode($kodes);
     }
 
     public function insertQty(Request $request){

@@ -16,11 +16,14 @@
                             <?php 
                             if(request()->input('noinbound') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" name="noinbound">
-                                <option value=''>--Select No Inbound--</option>
+                            <select type="text" class="form-control mb-2 js-inbound" id="noinbound" name="noinbound">
+                                <option></option>
+                                @foreach($inbound as $itemInbound)
+                                <option value='{{ $itemInbound->no }}'>{{ $itemInbound->no }}</option>
+                                @endforeach
                             </select>
                             <?php }else{?>
-                            <select type="text" class="form-control mb-2 select-trans" id="noinbound" name="noinbound">
+                            <select type="text" class="form-control mb-2 js-inbound" id="noinbound" name="noinbound">
                                 <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['hdnnoinbound'] }}</option>
                             </select>
                             <?php } ?>
@@ -89,26 +92,32 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
+                        {{-- <select class="contoh" name="state">
+                            <option></option>
+                            <option value="AL">Alabama</option>
+                            <option value="WY">Wyoming</option>
+                          </select> --}}
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
-                        <select class="form-control" id='palletid'>
-                            <option value='0'>--Select Pallet ID--</option>
+                        <select class="form-control js-pallet" id='palletid' name="pallet">
+                            <option></option>
+                            {{-- <option value="AL">Maya</option>
+                            <option value="IL">Uya</option>
+                            <option value="UL">Miya</option>
+                            <option value="ZL">Khalifah</option> --}}
+                            @foreach($pallet as $itemPallet)
+                            <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
+                            @endforeach
                         </select>
                     </div>
-                    {{-- Hidden PalletID --}}
-                    <?php 
-                    if(request()->input('hdnpallet') == null){ 
-                    ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
-                    <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnpallet" name="hdnpallet" value="" aria-label="readonly input example" readonly>
-                    <?php } ?>
-                    </div>
-                    {{-- END Hidden SKU --}}
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
-                        <select class="form-control" id='nopo' onchange="countItem()">
-                            <option value='0'>--Select No PO--</option>
+                        <select class="form-control js-nopo" id='nopo' name="nopo" onchange="countItem()">
+                            <option></option>
+                            @foreach($nopo as $itemNopo)
+                            <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
+                            @endforeach
+                            {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
                     {{-- Hidden SKU --}}
@@ -148,6 +157,7 @@
 </form>
 {{-- Bot Script --}}
 <script type="text/javascript">
+    var tempPo = [];
     var tempKode = [];
     var tempResponse = [];
     var tempInbound= [];
@@ -163,140 +173,171 @@
     console.log(kodes);
     console.log(kodes);
     $(document).ready(function(){
-        // #kode = SKU
-        var selInbound = $('#noinbound option:selected').text();
-        $("#noinbound").select2({
-            ajax: {
-                url: "{{route('getInbound')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchinbound :  params.term, //search term
-                        // notrans: selectedTrans
-                        // notrans: selInbound
-                    };
-                },
-                processResults: function (response) {
-                    // console.log(selectedTrans);
-                    // console.log("response");
-                    // console.log(JSON.stringify(response));
-                    tempInbound = response;
-                    console.log("tempInbound");
-                    console.log(tempInbound);
-                    // console.log(selTrans);
-                    return {
-                        results: tempInbound
-                    };
-                },
-                cache: true
-            }
+        $('.js-pallet').select2({
+            placeholder : 'Select Pallet',
+            allowClear : true
         });
-        // Pallet
-        $("#palletid").select2({
-            ajax: {
-                url: "{{route('getPallet')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchpallet :  params.term, //search term
-                    };
+        $('#palletid').on('select2:select',function (e) {
+            var id = $(this).val();
+            console.log("isi ID");
+            console.log(id);
+            $.ajax({
+                url : '{{ route('getPalletId') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response) {
+                    console.log("response Pallet");
+                    console.log(response);
+                    for (i=0;i<response.length;i++) {
+                        if (response[i].code==id){
+                            kode = $('#nama_sku').val(response[i].code);
+                            console.log("isi Kode");
+                            console.log(kode);
+                        }
+                    }
                 },
-                processResults: function (response) {
-                    // console.log(selectedTrans);
-                    // console.log("response");
-                    // console.log(JSON.stringify(response));
-                    tempPallet = response;
-                    console.log("tempPallet");
-                    console.log(tempPallet);
-                    // console.log(selTrans);
-                    return {
-                        results: tempPallet
-                    };
-                },
-                cache: true
-            }
+            });
         });
-        // No PO
-        $("#nopo").select2({
-            ajax: {
-                url: "{{route('getPo')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchpo :  params.term, //search term
-                    };
-                },
-                processResults: function (response) {
-                    // console.log(selectedTrans);
-                    // console.log("response");
-                    // console.log(JSON.stringify(response));
-                    tempPo = response;
-                    console.log("tempPallet");
-                    console.log(tempPallet);
-                    // console.log(selTrans);
-                    return {
-                        results: tempPo
-                    };
-                },
-                cache: true
-            }
+        $('.contoh').select2({
+            placeholder : 'Select Pallet',
+            allowClear : true
         });
+        // NO PO Method Baru
+        $('.js-nopo').select2({
+            placeholder : 'Select Nomor PO',
+            allowClear : true
+        });
+        $('#nopo').on('select2:select',function (e) {
+            var id = $(this).val();
+            $.ajax({
+                url : '{{ route('getPo') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response){
+                    console.log("res nopo");
+                    console.log(response);
+                    for (i=0; i < response.length; i++) {
+                        if (response[i].nopo==id){
+                            $("#nama_sku").val(response[i].code_mitem);
+                            $("#desc").val(response[i].name_mitem);
+                            $("#qtycrtn").val(response[i].qty);
+                            $("#sat").val(response[i].code_muom);
+                        }
+                    }
+                },
+            });
+        });
+        $('.js-inbound').select2({
+            placeholder : 'Select Nomor PO',
+            allowClear : true
+        });
+        $('#noinbound').on('select2:select',function (e) {
+            var id = $(this).val();
+            $.ajax({
+                url : '{{ route('getInbound') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response){
+                    console.log("res Inbound");
+                    console.log(response);
+                    for (i=0; i < response.length; i++) {
+                        if (response[i].no==id){
+                            $("#tglTrans").val(response[i].tdate);
+                            $("#pemilik").val(response[i].name_mbp);
+                            $("#note").val(response[i].note);
+                        }
+                    }
+                },
+            });
+        });
+        // $('.js-nopo').select2({});
+        // $('#nopo').on('select2:select',function (e) {
+        //     var id = $(this).val();
+        //     $.ajax({
+        //         url : '{{ route('getPo') }}',
+        //         method : 'post',
+        //         data : {'id' : id},
+        //         headers : {
+        //             'CSRF_TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+        //         dataType : 'json',
+        //         success : function (response){
+        //             console.log("res nopo");
+        //             console.log(response);
+        //             for (i=0; i < response.length; i++) {
+        //                 if (response[i].nopo==id){
+        //                     $("#nama_sku").val(response[i].code_mitem);
+        //                 }
+        //             }
+        //         },
+        //     });
+        // });
         // noInbound
-        $("#noinbound").change(function (e) {
-            console.log($("#noinbound").prop("selectedIndex"));
-            console.log(tempInbound);
-            // $("#hdnnoinbound").val(tempInbound[this.value-1].text);
-            tgl = tempInbound[this.value-1].tanggal;
-            date = new Date(tgl).toLocaleDateString('en-GB');
-            $("#tglTrans").val(date);
-            $("#pemilik").val(tempInbound[this.value-1].pemilik);
-            $("#note").val(tempInbound[this.value-1].note);
-        });
+        // $("#noinbound").change(function (e) {
+        //     console.log($("#noinbound").prop("selectedIndex"));
+        //     console.log(tempInbound);
+        //     // $("#hdnnoinbound").val(tempInbound[this.value-1].text);
+        //     tgl = tempInbound[this.value-1].tanggal;
+        //     date = new Date(tgl).toLocaleDateString('en-GB');
+        //     $("#tglTrans").val(date);
+        //     $("#pemilik").val(tempInbound[this.value-1].pemilik);
+        //     $("#note").val(tempInbound[this.value-1].note);
+        // });
+        // $("#nopo").change(function (e) {
+        //     $.ajax({
+        //         url : '{{ route('getCQty') }}',
+        //         method : 'post',
+        //         // data : {'id' : id},
+        //         headers : {
+        //             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+        //         dataType : 'json',
+        //         success : function (response){
+        //             console.log("res CountQty");
+        //             console.log(response);
+        //         },
+        //     });
+        // });
         $("#palletid").change(function (e) {
-            $("#hdnpallet").val(tempPallet[this.value-1].text);
-        });
-        $("#nopo").change(function (e) {
-            noinbound = $('#noinbound option:selected').text();
-            nopo = $("#hdnpo").val();
-            $("#hdnpo").val(tempPo[this.value-1].text);
-            $("#nama_sku").val(tempPo[this.value-1].sku);
-            
-            qtyint = tempPo[this.value-1].qty;
-            $("#desc").val(tempPo[this.value-1].desc);
-            $("#qtycrtn").val(parseInt(qtyint));
-            $("#sat").val(tempPo[this.value-1].sat);
-            // var kodes = {{  $kodes  }};
-            // console.log("Kodes");
-            // console.log(kodes);
-            // console.log(kodes)
+            pallet = $(this).val();
+            console.log("Isi Pallet");
+            console.log(pallet);
+            // $("#hdnpallet").val(tempPallet[this.value-1].text);
         });
     });
     function countItem(){
-            result = null;
+            var noinbound = $('#noinbound').val();
+            console.log("noinbound");
+            console.log(noinbound);
             $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{route('getCQty')}}",
-                type: 'post',
-                dataType: 'json',
-                // data: response,
-                success:function(response){
-                    console.log("Count");
+                url : '{{ route('getCQty') }}',
+                method : 'post',
+                data : {'noinbound' : noinbound},
+                // data: function (params) {
+                //     return {
+                //         _token: CSRF_TOKEN,
+                //         // searchsku :  params.term, //search term
+                //         noinbound: valnoinbound
+                //     };
+                // },
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response){
+                    console.log("noinbound");
+                    console.log(noinbound);
+                    for (i=0; i < response.length; i++) {
+                        $("#qtycount").val(response[i].id);
+                    }
+                    console.log("res CountQty");
                     console.log(response);
-                    tempKode = response
-                    return {
-                        result: tempKode
-                    };
                 },
             });
         }
