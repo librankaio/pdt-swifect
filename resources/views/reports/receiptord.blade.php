@@ -24,18 +24,12 @@
                             </select>
                             <?php }else{?>
                             <select type="text" class="form-control mb-2 js-inbound" id="noinbound" name="noinbound">
-                                <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['hdnnoinbound'] }}</option>
+                                <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['noinbound'] }}</option>
+                                @foreach($inbound as $itemInbound)
+                                <option value='{{ $itemInbound->no }}'>{{ $itemInbound->no }}</option>
+                                @endforeach
                             </select>
                             <?php } ?>
-                            {{-- Hidden No Inbound --}}
-                            <?php 
-                            if(request()->input('hdnnoinbound') == null){ 
-                            ?>
-                                <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="" name="hdnnoinbound" aria-label="readonly input example" readonly>
-                            <?php }else{?>
-                                <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="{{ $_GET['hdnnoinbound'] }}" name="hdnnoinbound" aria-label="readonly input example" readonly>
-                            <?php } ?>
-                            {{-- END Hidden No Inbound --}}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -99,20 +93,27 @@
                           </select> --}}
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
-                        <select class="form-control js-pallet" id='palletid' name="pallet">
-                            <option></option>
-                            {{-- <option value="AL">Maya</option>
-                            <option value="IL">Uya</option>
-                            <option value="UL">Miya</option>
-                            <option value="ZL">Khalifah</option> --}}
-                            @foreach($pallet as $itemPallet)
-                            <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
-                            @endforeach
-                        </select>
+                        <?php 
+                            if(request()->input('pallet') == 0){ 
+                        ?>
+                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                                <option></option>
+                                @foreach($pallet as $itemPallet)
+                                <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
+                                @endforeach
+                            </select>
+                        <?php }else{?>
+                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                                <option value="{{ $_GET['pallet'] }}">{{ $_GET['pallet'] }}</option>
+                                @foreach($pallet as $itemPallet)
+                                <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
+                                @endforeach
+                            </select>
+                        <?php }?>
                     </div>
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
-                        <select class="form-control js-nopo" id='nopo' name="nopo" onchange="countItem()">
+                        <select class="form-control js-nopo" id='nopo' name="nopo" >
                             <option></option>
                             @foreach($nopo as $itemNopo)
                             <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
@@ -120,14 +121,6 @@
                             {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
-                    {{-- Hidden SKU --}}
-                    <?php 
-                    if(request()->input('hdnpo') == null){ 
-                    ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnpo" name="hdnpo" value="" aria-label="readonly input example" readonly>
-                    <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnpo" name="hdnpo" value="" aria-label="readonly input example" readonly>
-                    <?php } ?>
                         <label for="nama_sku" class="form-label mt-2">SKU</label>
                         <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
                         <label for="desc" class="form-label">Description</label>
@@ -157,21 +150,8 @@
 </form>
 {{-- Bot Script --}}
 <script type="text/javascript">
-    var tempPo = [];
-    var tempKode = [];
-    var tempResponse = [];
-    var tempInbound= [];
-    var tempLok = [];
-    var tempPallet = [];
-    var selectedLok = null;
-    var selectedTrans = null;
-    // var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    var kodes = {!!  $kodes  !!};
-    console.log("Kodes");
-    console.log(kodes);
-    console.log(kodes);
     $(document).ready(function(){
         $('.js-pallet').select2({
             placeholder : 'Select Pallet',
@@ -191,13 +171,13 @@
                 success : function (response) {
                     console.log("response Pallet");
                     console.log(response);
-                    for (i=0;i<response.length;i++) {
-                        if (response[i].code==id){
-                            kode = $('#nama_sku').val(response[i].code);
-                            console.log("isi Kode");
-                            console.log(kode);
-                        }
-                    }
+                    // for (i=0;i<response.length;i++) {
+                    //     if (response[i].code==id){
+                    //         kode = $('#nama_sku').val(response[i].code);
+                    //         console.log("isi Kode");
+                    //         console.log(kode);
+                    //     }
+                    // }
                 },
             });
         });
@@ -226,16 +206,39 @@
                         if (response[i].nopo==id){
                             $("#nama_sku").val(response[i].code_mitem);
                             $("#desc").val(response[i].name_mitem);
-                            $("#qtycrtn").val(response[i].qty);
+                            $("#qtycrtn").val(parseInt(response[i].qty));
                             $("#sat").val(response[i].code_muom);
                         }
                     }
+                    var noinbound = $('#noinbound').val();
+                    var nopo = $('#nopo').val();
+                    $.ajax({
+                        url : '{{ route('getCQty') }}',
+                        method : 'post',
+                        data : {'noinbound': noinbound,
+                                'nopo': nopo},
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                        dataType : 'json',
+                        success : function (response){
+                            console.log("noinbound");
+                            console.log(noinbound);
+                            console.log("response inbound");
+                            console.log(response.length);
+                            for (i=0; i < response.length; i++) {
+                                $("#qtycount").val(response[i].jumlah);
+                            }
+                            console.log("res CountQty");
+                            console.log(response);
+                        },
+                    });
                 },
             });
         });
         $('.js-inbound').select2({
             placeholder : 'Select Nomor PO',
-            allowClear : true
+            allowClear : true,
+            initSelection: function(element, callback) {},
         });
         $('#noinbound').on('select2:select',function (e) {
             var id = $(this).val();
@@ -251,11 +254,35 @@
                     console.log(response);
                     for (i=0; i < response.length; i++) {
                         if (response[i].no==id){
-                            $("#tglTrans").val(response[i].tdate);
+                            tgl = response[i].tdate;
+                            date = new Date(tgl).toLocaleDateString('en-GB');
+                            $("#tglTrans").val(date);
                             $("#pemilik").val(response[i].name_mbp);
                             $("#note").val(response[i].note);
                         }
                     }
+                    var noinbound = $('#noinbound').val();
+                    var nopo = $('#nopo').val();
+                    $.ajax({
+                        url : '{{ route('getCQty') }}',
+                        method : 'post',
+                        data : {'noinbound': noinbound,
+                                'nopo': nopo},
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                        dataType : 'json',
+                        success : function (response){
+                            console.log("noinbound");
+                            console.log(noinbound);
+                            console.log("response inbound");
+                            console.log(response.length);
+                            for (i=0; i < response.length; i++) {
+                                $("#qtycount").val(response[i].jumlah);
+                            }
+                            console.log("res CountQty");
+                            console.log(response);
+                        },
+                    });
                 },
             });
         });
@@ -312,47 +339,24 @@
             // $("#hdnpallet").val(tempPallet[this.value-1].text);
         });
     });
-    function countItem(){
-            var noinbound = $('#noinbound').val();
-            console.log("noinbound");
-            console.log(noinbound);
-            $.ajax({
-                url : '{{ route('getCQty') }}',
-                method : 'post',
-                data : {'noinbound' : noinbound},
-                // data: function (params) {
-                //     return {
-                //         _token: CSRF_TOKEN,
-                //         // searchsku :  params.term, //search term
-                //         noinbound: valnoinbound
-                //     };
-                // },
-                headers : {
-                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
-                dataType : 'json',
-                success : function (response){
-                    console.log("noinbound");
-                    console.log(noinbound);
-                    for (i=0; i < response.length; i++) {
-                        $("#qtycount").val(response[i].id);
-                    }
-                    console.log("res CountQty");
-                    console.log(response);
-                },
-            });
-        }
     // #finish = Reset all fields
+    // function reset() {
+    //     $('#noinbound').select2('val','');
+    // }
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
-        $("#noinbound").empty();
-        $("#noinbound").append("<option value='0'>--Select No Inbound--</option>");
+        // $("#noinbound").empty();
+        $("#noinbound").val('').trigger('change')
+        // $("#noinbound").append("<option value=""></option>");
         document.getElementById('tglTrans').value = "";
         document.getElementById('pemilik').value = "";
         document.getElementById('note').value = "";
-        $("#palletid").empty();
-        $("#palletid").append("<option value='0'>--Select Pallet ID--</option>");
-        $("#nopo").empty();
-        $("#nopo").append("<option value='0'>--Select No PO--</option>");
+        $("#palletid").val('').trigger('change')
+        // $("#palletid").empty();
+        // $("#palletid").append("<option value='0'>--Select Pallet ID--</option>");
+        $("#nopo").val('').trigger('change')
+        // $("#nopo").empty();
+        // $("#nopo").append("<option value='0'>--Select No PO--</option>");
         document.getElementById('nama_sku').value = "";
         document.getElementById('desc').value = "";
         document.getElementById('qtycrtn').value = "";

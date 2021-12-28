@@ -64,24 +64,6 @@ class ReceiptOrderController extends Controller
 
     public function getInbound(){
         $inbound = DB::table('tinbound')->get();
-        // $searchinbound = $request->searchinbound;
-        // if($searchinbound == ''){
-        //     $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->limit(10)->get();
-        // }else{
-        //     $kodes = DB::table('tinbound')->orderBy('id','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchinbound. '%')->limit(10)->get();
-        // }
-
-        // $response = array();
-        // foreach($kodes as $kode){
-        //     $response[] = array(
-        //         "id"=>$kode->id,
-        //         "text"=>$kode->no,
-        //         "tanggal"=>$kode->tdate,
-        //         "pemilik"=>$kode->name_mbp,
-        //         "note"=>$kode->note,
-        //     );
-        // }
-        // return response()->json($response);
         return json_encode($inbound);
     }
 
@@ -115,27 +97,7 @@ class ReceiptOrderController extends Controller
         $item_r = DB::table('mpallet')->get();
         return json_encode($item_r);
     }
-    // public function getPo(Request $request){
-    //     $searchpo = $request->searchpallet;
-    //     if($searchpo == ''){
-    //         $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
-    //     }else{
-    //         $kodes = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->where('no_tinbound', 'like',  '%' .$searchpo. '%')->limit(10)->get();
-    //     }
 
-    //     $response = array();
-    //     foreach($kodes as $kode){
-    //         $response[] = array(
-    //             "id"=>$kode->id,
-    //             "text"=>$kode->nopo,
-    //             "sku"=>$kode->code_mitem,
-    //             "desc"=>$kode->name_mitem,
-    //             "qty"=>$kode->qty,
-    //             "sat"=>$kode->code_muom,
-    //         );
-    //     }
-    //     return response()->json($response);
-    // }
     public function getPoRead(Request $request){
         $id = $request->input('id');
         $item = $request->get('nopo');
@@ -150,31 +112,34 @@ class ReceiptOrderController extends Controller
 
     public function getCQty(Request $request){
         $noinbound = $request->noinbound;
-        $nopo = $request->input('nopo');
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
-        // if($searchpallet == ''){
-            
-        // }else{
-        //     $kodes = DB::table('tinboundid')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
-        // }
+        $nopo = $request->nopo;
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
         
         return json_encode($kodes);
     }
 
     public function insertQty(Request $request){
         // dd($request->all());
-        $noinbound = $request->input('hdnnoinbound');
+        $noinbound = $request->input('noinbound');
         $sku = $request->input('nama_sku');
-        $nopo = $request->input('hdnpo');
-        $pallet = $request->input('hdnpallet');
+        $nopo = $request->input('nopo');
+        $pallet = $request->input('pallet');
         $cartonid = $request->input('crtnid');
         $sat = $request->input('sat');
         // dd($request->all());
         DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'usin'=>'1']);
         
+        $pallet = DB::table('mpallet')->get();
+        $nopo = DB::table('tinboundd')->get();
+        $inbound = DB::table('tinbound')->get();
+        $item_r = DB::table('tinboundd')->get();
         // return redirect('/dashboard');
 
-        return view('reports.receiptord');
+        return view('reports.receiptord',[
+            'pallet'=>$pallet,
+            'nopo'=>$nopo,
+            'inbound'=>$inbound,
+            'item_r'=>$item_r]);
     }
 
     
