@@ -363,6 +363,7 @@
         document.getElementById('crtnid').value = "";
         document.getElementById('sat').value = "";
     });
+    
     // VALIDATE TRIGGER
     $("#qty").keyup(function(e){
         if (/\D/g.test(this.value)){
