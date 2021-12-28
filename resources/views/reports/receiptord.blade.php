@@ -14,7 +14,7 @@
                             
                             <label for="noinbound" class="form-label">No Inbound</label>
                             <?php 
-                            if(request()->input('noinbound') == 0){ 
+                            if(request()->input('noinbound') == null){ 
                             ?>
                             <select type="text" class="form-control mb-2 js-inbound" id="noinbound" name="noinbound">
                                 <option></option>
@@ -94,7 +94,7 @@
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
                         <?php 
-                            if(request()->input('pallet') == 0){ 
+                            if(request()->input('pallet') == null){ 
                         ?>
                             <select class="form-control js-pallet" id='palletid' name="pallet">
                                 <option></option>
@@ -363,7 +363,7 @@
         document.getElementById('crtnid').value = "";
         document.getElementById('sat').value = "";
     });
-    
+
     // VALIDATE TRIGGER
     $("#qty").keyup(function(e){
         if (/\D/g.test(this.value)){
