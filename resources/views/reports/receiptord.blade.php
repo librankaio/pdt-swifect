@@ -359,6 +359,7 @@
         // $("#nopo").append("<option value='0'>--Select No PO--</option>");
         document.getElementById('nama_sku').value = "";
         document.getElementById('desc').value = "";
+        document.getElementById('qtycount').value = "";
         document.getElementById('qtycrtn').value = "";
         document.getElementById('crtnid').value = "";
         document.getElementById('sat').value = "";
