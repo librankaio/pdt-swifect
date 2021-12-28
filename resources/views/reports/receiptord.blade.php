@@ -124,7 +124,7 @@
                         <label for="nama_sku" class="form-label mt-2">SKU</label>
                         <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
                         <label for="desc" class="form-label">Description</label>
-                        <input type="text" class="form-control mb-2" id="desc"   value="" aria-label="readonly input example" readonly>
+                        <input type="text" class="form-control mb-2" id="desc" name="desc"  value="" aria-label="readonly input example" readonly>
                         <label for="qtycount" class="form-label">Quantity Count</label>
                         <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
                         <label for="qtycrtn" class="form-label">Total QTY Carton</label>
@@ -379,6 +379,7 @@
         qty = $("#qty").val();
         lokasi = $("#lokasi").val();
         pallet = $("#pallet").val();
+        cartonid = $("#crtnid").val();
         if (notrans == ""){
             alert("Please select No Transaksi");
             return false;
@@ -393,6 +394,9 @@
             return false;
         }else if (pallet == ""){
             alert("Please insert Value of Pallet");
+            return false;
+        }else if (cartonid == ""){
+            alert("Please insert Value of Id Carton");
             return false;
         }
     });

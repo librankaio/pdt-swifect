@@ -24,7 +24,14 @@ class ReceiptOrderController extends Controller
 
         $item_r = DB::table('tinboundd')->get();
 
-        
+        // $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=','928401238490823908230')->get();
+
+        // foreach($cartoncount as $itemcrtn){
+        //     $hasil = $itemcrtn->jcrtnid; 
+        // }
+
+        // dd($hasil);
+
         return view('reports.receiptord',[
             'kodes'=>$kodes,
             'item_r'=>$item_r,
@@ -126,20 +133,61 @@ class ReceiptOrderController extends Controller
         $pallet = $request->input('pallet');
         $cartonid = $request->input('crtnid');
         $sat = $request->input('sat');
-        // dd($request->all());
-        DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'usin'=>'1']);
+        $desc = $request->input('desc');
         
-        $pallet = DB::table('mpallet')->get();
-        $nopo = DB::table('tinboundd')->get();
-        $inbound = DB::table('tinbound')->get();
-        $item_r = DB::table('tinboundd')->get();
+        //validate id carton
+        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->get();
+        
+        foreach($cartoncount as $itemcrtn){
+            $hasil = $itemcrtn->jcrtnid; 
+        }
+        // dd($hasil);
+        if ($hasil >= 1){
+            $pallet = DB::table('mpallet')->get();
+            $nopo = DB::table('tinboundd')->get();
+            $inbound = DB::table('tinbound')->get();
+            $item_r = DB::table('tinboundd')->get();
+            // return redirect('/dashboard');
+
+            return view('reports.receiptord',[
+                'pallet'=>$pallet,
+                'nopo'=>$nopo,
+                'inbound'=>$inbound,
+                'item_r'=>$item_r,
+                'message_error'=> 'Data carton ID Sudah ada!']);
+        }else{
+            // return redirect()->back()->with('error','Data carton ID Sudah ada!',compact('pallet','nopo','inbound','item_r'));
+            // dd($request->all());
+            DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+            
+            $pallet = DB::table('mpallet')->get();
+            $nopo = DB::table('tinboundd')->get();
+            $inbound = DB::table('tinbound')->get();
+            $item_r = DB::table('tinboundd')->get();
+            // return redirect('/dashboard');
+
+            return view('reports.receiptord',[
+                'pallet'=>$pallet,
+                'nopo'=>$nopo,
+                'inbound'=>$inbound,
+                'item_r'=>$item_r,
+                'message_success'=>'Data Berhasil Di inputkan']);
+        }
+
+        // dd($request->all());
+        // DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+        
+        // $pallet = DB::table('mpallet')->get();
+        // $nopo = DB::table('tinboundd')->get();
+        // $inbound = DB::table('tinbound')->get();
+        // $item_r = DB::table('tinboundd')->get();
         // return redirect('/dashboard');
 
-        return view('reports.receiptord',[
-            'pallet'=>$pallet,
-            'nopo'=>$nopo,
-            'inbound'=>$inbound,
-            'item_r'=>$item_r]);
+        // return view('reports.receiptord',[
+        //     'pallet'=>$pallet,
+        //     'nopo'=>$nopo,
+        //     'inbound'=>$inbound,
+        //     'item_r'=>$item_r]);
     }
 
     
