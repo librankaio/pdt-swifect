@@ -7,83 +7,105 @@ use Illuminate\Support\Facades\DB;
 
 class OutboundController extends Controller
 {
-    public function index(){
-        return view('reports.outbound');
-    }
+    public function index(Request $request){
+        $noutbound = $request->noutbound;
+        $nopo = $request->nopo;
+        $kodes = DB::table('toutboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_toutbound','=',$noutbound)->get();
 
-    public function getKode(Request $request){
-        $searchsku = $request->search;
-        $notrans = $request->notrans;
-        if($notrans == null){
-            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('stat','=','1')->where('no_toutbound', '=' .$notrans)->limit(10)->get();
-        }else{
-            $kodes = DB::table('toutboundd')->orderBy('code_mitem','asc')->where('stat','=','1')->where('no_toutbound',  'like',  '%'.$searchsku.'%')->limit(10)->get();
-        }
-
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->code_mitem,
-                "nama"=>$kode->name_mitem,
-                "sat"=>$kode->code_muom,
-                "lokasi"=>$kode->code_mwhse,
-                "pallet"=>$kode->pallet,
-            );
-        }
-        return response()->json($response);
-    }
-
-    public function getNoTrans(Request $request){
-        $searchTrans = $request->searchTrans;
-        if($searchTrans == ''){
-            $kodes = DB::table('toutbound')->orderby('no','asc')->where('stat','=','1')->limit(10)->get();
-        }else{
-            $kodes = DB::table('toutbound')->orderby('no','asc')->where('stat','=','1')->where('no', 'like',  '%' .$searchTrans. '%')->limit(10)->get();
-        }
-
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->no,
-                "tgl"=>$kode->tdate,
-                "nama"=>$kode->name_mbp,
-                "note"=>$kode->note
-            );
-        }
-        return response()->json($response);
-    }
-
-    public function getLokasi(Request $request){
-        $searchLok = $request->searchLok;
-        if($searchLok == ''){
-            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
-        }else{
-            $kodes = DB::table('mwhse')->orderby('id','asc')->where('stat','=','1')->where('code_mwhse', 'like',  '%' .$searchLok. '%')->limit(10)->get();
-        }
-
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->code_mwhse,
-            );
-        }
-        return response()->json($response);
-    }
-
-    public function updSKU(Request $request){
-        // dd($request->all());
-        $notrans = $request->input('hdntrans');
-        $sku = $request->input('skuhdn');
-        $pallet = $request->input('pallet');
-        $lokasi = $request->input('hdnlokasi');
-        $qty = $request->input('qty');
-        // dd($request->all());
-        DB::table('toutboundd')->where('no_toutbound','=',$notrans)->where('stat','=','1')->where('code_mitem','=',$sku)->update(['qtycheck'=> $qty,'pallet'=>$pallet,'code_mwhse'=>$lokasi]);
+        $pallet = DB::table('mpallet')->get();
         
-        // return redirect('/dashboard');
-        return view('reports.outbound');
+        $nopo = DB::table('toutboundd')->get();
+
+        $outbound = DB::table('toutbound')->get();
+
+        $item_r = DB::table('toutboundd')->get();
+        // dd($nopo);
+        return view('reports.outbound',[
+            'kodes'=>$kodes,
+            'item_r'=>$item_r,
+            'pallet'=>$pallet,
+            'nopo'=>$nopo,
+            'outbound'=>$outbound]);
+    }
+
+    public function getOutbound(){
+        $outbound = DB::table('toutbound')->get();
+        return json_encode($outbound);
+    }
+
+    public function getPalletId(Request $request){
+        $id = $request->input('id');
+        $item_r = DB::table('mpallet')->get();
+        return json_encode($item_r);
+    }
+
+    public function getPoOutbound(Request $request){
+        // $id = $request->input('id');
+        $item_r = DB::table('toutboundd')->get();
+        return json_encode($item_r);
+    }
+
+    public function getCQtyOut(Request $request){
+        $nooutbound = $request->nooutbound;
+        $nopo = $request->nopo;
+        $kodes = DB::table('toutboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_toutbound','=',$nooutbound)->get();
+        
+        return json_encode($kodes);
+    }
+
+    public function getIdCrtnOut(Request $request){
+        $idcarton = $request->idcarton;
+        $cartoncount = DB::table('toutboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->get();
+        
+        return json_encode($cartoncount);
+    }
+
+    public function insOutbound(Request $request){
+        // dd($request->all());
+
+        $noutbound = $request->input('noutbound');
+        $sku = $request->input('nama_sku');
+        $nopo = $request->input('nopo');
+        $pallet = $request->input('pallet');
+        $cartonid = $request->input('crtnid');
+        $sat = $request->input('sat');
+        $desc = $request->input('desc');
+
+        $cartoncount = DB::table('toutboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->get();
+        
+        foreach($cartoncount as $itemcrtn){
+            $hasil = $itemcrtn->jcrtnid; 
+        }
+
+        // dd($hasil);
+        if ($hasil >= 1){
+            $pallet = DB::table('mpallet')->get();
+            $nopo = DB::table('toutboundd')->get();
+            $outbound = DB::table('toutbound')->get();
+            $item_r = DB::table('toutboundd')->get();
+            // return redirect('/dashboard');
+
+            return view('reports.outbound',[
+                'pallet'=>$pallet,
+                'nopo'=>$nopo,
+                'outbound'=>$outbound,
+                'item_r'=>$item_r,
+                'message_error'=> 'Data carton ID Sudah ada!']);
+        }else{
+            DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+            
+            $pallet = DB::table('mpallet')->get();
+            $nopo = DB::table('toutboundd')->get();
+            $outbound = DB::table('toutbound')->get();
+            $item_r = DB::table('toutboundd')->get();
+            // return redirect('/dashboard');
+
+            return view('reports.outbound',[
+                'pallet'=>$pallet,
+                'nopo'=>$nopo,
+                'outbound'=>$outbound,
+                'item_r'=>$item_r,
+                'message_success'=>'Data Berhasil Di inputkan']);
+        }
     }
 }

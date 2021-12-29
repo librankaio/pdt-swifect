@@ -3,6 +3,7 @@
 <body>
 <form action="" class="px-4">
     <div class="container">      
+        @include('layouts.flash-message') 
         <h3>OUTBOUND TRANSACTION</h3>
         <br>     
         <div class="row">
@@ -10,27 +11,24 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="noTrans" class="form-label">No Trans</label>
+                            <label for="noutbound" class="form-label">No Outbound</label>
                             <?php 
-                            if(request()->input('noTrans') == 0){ 
+                            if(request()->input('noutbound') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2" id="noTrans" onchange="" name="noTrans">
-                                <option value='0'>--Select Code--</option>
+                            <select type="text" class="form-control mb-2 js-outbound" id="noutbound" onchange="" name="noutbound">
+                                <option></option>
+                                @foreach($outbound as $itemOutbound)
+                                <option value='{{ $itemOutbound->no }}'>{{ $itemOutbound->no }}</option>
+                                @endforeach
                             </select>
                             <?php }else{?>
-                                <select type="text" class="form-control mb-2 select-trans" id="noTrans" onchange="" name="noTrans">
-                                    <option value='{{ $_GET['noTrans'] }}'>{{ $_GET['hdntrans'] }}</option>
+                                <select type="text" class="form-control mb-2 js-outbound" id="noutbound" name="noutbound">
+                                    <option value='{{ $_GET['noutbound'] }}'>{{ $_GET['noutbound'] }}</option>
+                                    @foreach($outbound as $itemOutbound)
+                                    <option value='{{ $itemOutbound->no }}'>{{ $itemOutbound->no }}</option>
+                                    @endforeach
                                 </select>
                             <?php } ?>
-                            {{-- Hidden Trans --}}
-                            <?php 
-                            if(request()->input('hdntrans') == null){ 
-                            ?>
-                                <input type="hidden" class="form-control mb-2" id="hdntrans" value="" name="hdntrans" aria-label="readonly input example" readonly>
-                            <?php }else{?>
-                                <input type="hidden" class="form-control mb-2" id="hdntrans" value="{{ $_GET['hdntrans'] }}" name="hdntrans" aria-label="readonly input example" readonly>
-                            <?php } ?>
-                            {{-- END Hidden --}}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -87,43 +85,53 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
-                    <label for="sku" class="form-label">SKU</label>
+                    <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
-                        <select class="form-control" id='kode'>
-                            <option value='0'>--Select Code--</option>
+                        <?php 
+                            if(request()->input('pallet') == null){ 
+                        ?>
+                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                                <option></option>
+                                @foreach($pallet as $itemPallet)
+                                <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
+                                @endforeach
+                            </select>
+                        <?php }else{?>
+                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                                <option value="{{ $_GET['pallet'] }}">{{ $_GET['pallet'] }}</option>
+                                @foreach($pallet as $itemPallet)
+                                <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
+                                @endforeach
+                            </select>
+                        <?php }?>
+                    </div>
+                    <label for="nopo" class="form-label">No PO</label>
+                    <div class="search-select-box">
+                        <select class="form-control js-nopo" id='nopo' name="nopo" >
+                            <option></option>
+                            @foreach($nopo as $itemNopo)
+                            <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
+                            @endforeach
+                            {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
-                    {{-- Hidden SKU --}}
-                    <?php 
-                    if(request()->input('skuhdn') == null){ 
-                    ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
-                    <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnsku" name="skuhdn" value="" aria-label="readonly input example" readonly>
-                    <?php } ?>
-                    {{-- END Hidden SKU --}}
                     </div>
-                    <label for="nama" class="form-label">Nama / Deskripsi</label>
-                    <input type="text" class="form-control mb-2" id="nama_sku" value="" aria-label="readonly input example" readonly>
-                    <label for="qty" class="form-label">Quantity</label>
-                    <input type="text" class="form-control mb-2" id="qty" name="qty">
+                    <label for="nama_sku" class="form-label">SKU</label>
+                    <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
+                    <label for="desc" class="form-label">Description</label>
+                    <input type="text" class="form-control mb-2" id="desc" name="desc" value="" aria-label="readonly input example" readonly>
+                    <label for="qtycount" class="form-label">Quantity Count</label>
+                    <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
+                    <label for="qtycrtn" class="form-label">Total QTY Carton</label>
+                    <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
+                    <label for="crtnid" class="form-label" >Carton ID</label>
+                    <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example" onchange="idcarton()">
                     <label for="sat" class="form-label">Satuan</label>
-                    <input type="text" class="form-control mb-2" id="sat" value="" aria-label="readonly input example" readonly>
-                    <label for="lokasi" class="form-label">Lokasi</label>
-                    <div class="search-select-box">
-                        <select class="form-control" id='lokasi'>
-                            <option value='0'>--Select Lokasi--</option>
-                        </select>
-                        {{-- Hidden Lokasi --}}
-                        <input type="hidden" class="form-control mb-2" id="hdnlokasi" name="hdnlokasi" value="" aria-label="readonly input example" readonly>
-                        {{-- END Hidden Lokasi --}}
-                    </div>
-                    <label for="pallet" class="form-label">Pallet</label>
-                    <input type="text" class="form-control mb-2" id="pallet" name="pallet">
+                    <input type="text" class="form-control mb-2" id="sat" name="sat" value="" aria-label="readonly input example" readonly>
                     <div class="row">
                         <div class="col-sm-12 text-end mb-4">
                             <form action="">                                
-                                <button type="submit" class="btn btn-primary" id="ok" formaction="{{ 'updskuOut' }}">OK</button>
+                                <button type="submit" class="btn btn-primary" id="ok" formaction="{{ 'insOutbound' }}">OK</button>
                                 <a type="button" class="btn btn-primary" id="finish">Finish</a>
                             </form>
                         </div>
@@ -136,190 +144,203 @@
 </form>
 {{-- Kodingan fix --}}
 <script type="text/javascript">
-    var tempResponse = [];
-    var tempSku= [];
-    var tempLok = [];
-    var selectedLok = null;
-    var selectedTrans = null;
-    var selectedSKU = null;
     //CSRF TOKEN
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
-        // #kode = SKU
-        var selTrans = $('#noTrans option:selected').text();
-        $("#kode").select2({
-            ajax: {
-                url: "{{route('getKodeOut')}}",
-                type: "post",
-                dataType: "json",
-                delay: 50,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchsku :  params.term, //search term
-                        notrans: selTrans
-                    };
-                },
-                processResults: function (response) {
-                    // console.log("response");
-                    // console.log(JSON.stringify(response));
-                    tempSku = response;
-                    return {
-                        results: tempSku
-                    };
-                },
-                cache: true
-            }
+        $('.js-outbound').select2({
+            placeholder : 'Select Nomor Outbound',
+            allowClear : true,
+            initSelection: function(element, callback) {},
         });
-        $("#noTrans").select2({
-            ajax: {
-                url: "{{route('getNoTransOut')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    // console.log(JSON.stringify(params));
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchTrans : params.term //search term
-                    };
+        $('#noutbound').on('select2:select',function (e) {
+            var id = $(this).val();
+            $.ajax({
+                url : '{{ route('getOutbound') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response){
+                    console.log("res Inbound");
+                    console.log(response);
+                    for (i=0; i < response.length; i++) {
+                        if (response[i].no==id){
+                            tgl = response[i].tdate;
+                            date = new Date(tgl).toLocaleDateString('en-GB');
+                            $("#tglTrans").val(date);
+                            $("#pemilik").val(response[i].name_mbp);
+                            $("#note").val(response[i].note);
+                        }
+                    }
+                    var nooutbound = $('#noutbound').val();
+                    var nopo = $('#nopo').val();
+                    $.ajax({
+                        url : '{{ route('getCQty') }}',
+                        method : 'post',
+                        data : {'nooutbound': nooutbound,
+                                'nopo': nopo},
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                        dataType : 'json',
+                        success : function (response){
+                            console.log("noutbound");
+                            console.log(noutbound);
+                            console.log("response inbound");
+                            console.log(response.length);
+                            for (i=0; i < response.length; i++) {
+                                $("#qtycount").val(response[i].jumlah);
+                            }
+                            console.log("res CountQty");
+                            console.log(response);
+                        },
+                    });
                 },
-                processResults: function (response) {
-                    // console.log("response");
-                    // console.log(response);
-                    // tempResponse = response;
-                    // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
-                    tempResponse = response
-                    // console.log("tempResponse");
-                    // console.log(tempResponse)
-                    return {
-                        results: tempResponse
-                    };
+            });
+        });
+        $('.js-pallet').select2({
+            placeholder : 'Select Pallet',
+            allowClear : true
+        });
+        $('#palletid').on('select2:select',function (e) {
+            var id = $(this).val();
+            console.log("isi ID");
+            console.log(id);
+            $.ajax({
+                url : '{{ route('getPalletId') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response) {
+                    console.log("response Pallet");
+                    console.log(response);
                 },
-                cache: true
-            }
+            });
         });
-
-        $("#noTrans").change(function (e) {
-            selTrans = tempResponse[this.value-1].text;
-            $("#hdntrans").val(tempResponse[this.value-1].text);
-            // $("#tglTrans").val(tempResponse[this.value-1].tgl);
-            tgl = tempResponse[this.value-1].tgl;
-            console.log(tgl);
-            date = new Date(tgl).toLocaleDateString('en-GB');
-            $("#tglTrans").val(date);
-            $("#pemilik").val(tempResponse[this.value-1].nama);
-            $("#note").val(tempResponse[this.value-1].note);
-            document.getElementById('qty').focus();
-
-            // Clear SKU form
-            $("#kode").empty();
-            $("#kode").append("<option value='0'>--Select Code--</option>");
-            $("#nama_sku").val(null);
-            $("#sat").val(null);
-            $("#hdnsku").val(null);
-            $("#pallet").val(null);
-            $("#lokasi").empty();
-            $("#lokasi").append("<option value='0'>--Select Lokasi--</option>");
-            console.log(selectedTrans);
-            console.log($( "#noTrans" ).val());
+        // NO PO Method Baru
+        $('.js-nopo').select2({
+            placeholder : 'Select Nomor PO',
+            allowClear : true
         });
-
-        $("#kode").change(function (e) {
-            // console.log($("#kode").prop("selectedIndex"))
-            // console.log(tempSku);
-            $("#nama_sku").val(tempSku[$("#kode").prop("selectedIndex") - 1].nama);
-            $("#sat").val(tempSku[$("#kode").prop("selectedIndex") - 1].sat);
-            // $("#lokasi").val(tempSku[$("#kode").prop("selectedIndex") - 1].lokasi);
-            $("#pallet").val(tempSku[$("#kode").prop("selectedIndex") - 1].pallet);
-            $("#hdnsku").val(tempSku[$("#kode").prop("selectedIndex") - 1].text);
-            document.getElementById('qty').focus();
+        $('#nopo').on('select2:select',function (e) {
+            var id = $(this).val();
+            $.ajax({
+                url : '{{ route('getPoOutbound') }}',
+                method : 'post',
+                data : {'id' : id},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response){
+                    console.log("res nopo");
+                    console.log(response);
+                    for (i=0; i < response.length; i++) {
+                        if (response[i].nopo==id){
+                            $("#nama_sku").val(response[i].code_mitem);
+                            $("#desc").val(response[i].name_mitem);
+                            $("#qtycrtn").val(parseInt(response[i].qty));
+                            $("#sat").val(response[i].code_muom);
+                        }
+                    }
+                    var nooutbound = $('#noutbound').val();
+                    var nopo = $('#nopo').val();
+                    $.ajax({
+                        url : '{{ route('getCQtyOut') }}',
+                        method : 'post',
+                        data : {'nooutbound': nooutbound,
+                                'nopo': nopo},
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                        dataType : 'json',
+                        success : function (response){
+                            for (i=0; i < response.length; i++) {
+                                jmlInput = response[i].jumlah;
+                            }
+                            if (jmlInput == null){
+                                $("#qtycount").val(0);
+                            }else{
+                                $("#qtycount").val(jmlInput);
+                            }
+                            // console.log("nooutbound");
+                            // console.log(nooutbound);
+                            // console.log("response nooutbound");
+                            // console.log(response.length);
+                            // for (i=0; i < response.length; i++) {
+                            //     $("#qtycount").val(response[i].jumlah);
+                            // }
+                            // console.log("res CountQty");
+                            // console.log(response);
+                        },
+                    });
+                },
+            });
         });
 
     });
+    // Trigger IDCarton
+    function idcarton() {        
+        // Validate Id Carton
+        var idcarton = $("#crtnid").val();
+        $.ajax({
+            url : '{{ route('getIdCrtnOut') }}',
+            method : 'post',
+            data : {'idcarton': idcarton},
+            headers : {
+                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+            dataType : 'json',
+            success : function (response){
+                console.log("carton id");
+                console.log(response);
+                for (i=0; i < response.length; i++) {
+                    hasil = response[i].jcrtnid;
+                    if (hasil >= 1){
+                        alert('Data ID Sudah ada BOSS!')
+                        $("#crtnid").val('');
+                    }
+                }                
+            },
+        });
+    }
     // #finish = Reset all fields
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
-        $("#kode").empty();
-        $("#kode").append("<option value='0'>--Select Code--</option>");
-        selTrans = $('#noTrans option:selected').text("--Select Code--");
-        document.getElementById('nama_sku').value = "";
-        document.getElementById('qty').value = "";
-        document.getElementById('sat').value = "";
-        // document.getElementById('lokasi').value = "";
-        $("#lokasi").empty();
-        $("#lokasi").append("<option value='0'>--Select Code--</option>");
-        document.getElementById('pallet').value = "";
-        $("#noTrans").empty();
-        $("#noTrans").append("<option value='0'>--Select Code--</option>");
+        //-----------No Outbound--------------
+        $("#noutbound").val('').trigger('change')
         document.getElementById('tglTrans').value = "";
-        document.getElementById('note').value = "";
         document.getElementById('pemilik').value = "";
+        document.getElementById('note').value = "";
+        //-----------Pallet--------------
+        $("#palletid").val('').trigger('change');
+        //-----------NOPO--------------
+        $("#nopo").val('').trigger('change');
+        document.getElementById('nama_sku').value = "";
+        document.getElementById('desc').value = "";
+        document.getElementById('qtycount').value = "";
+        document.getElementById('qtycrtn').value = "";
+        document.getElementById('crtnid').value = "";
+        document.getElementById('sat').value = "";
     });
-    // #lokasi = lokasi
-    $("#lokasi").select2({
-            ajax: {
-                url: "{{route('getLokasiOut')}}",
-                type: "post",
-                dataType: "json",
-                delay: 50,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchLok :  params.term, //search term
-                        // notrans: selectedTrans
-                    };
-                },
-                processResults: function (response) {
-                    console.log("response");
-                    console.log(JSON.stringify(response));
-                    tempLok = response;
-                    // tempSku = response;
-                    // response.map(x => tempResponse.filter(a => a.text == x.text).length > 0 ? null : tempResponse.push(x));
-                    // console.log(tempResponse);
-                    console.log(tempLok)
-                    return {
-                        results: tempLok
-                    };
-                },
-                cache: true
-            }
-        });
-        $("#lokasi").change(function (e) {
-            selectedLok = tempLok[this.value-1].text;
-            console.log(selectedLok);
-            $("#hdnlokasi").val(selectedLok);
-        });
-        // VALIDATE TRIGGER
-        $("#qty").keyup(function(e){
-            if (/\D/g.test(this.value)){
-                // Filter non-digits from input value.
-                this.value = this.value.replace(/\D/g, '');
-            }
-        });
-        $(document).on("click","#ok",function(e){
-            // Validate ifnull
-            notrans = $("#noTrans").val();
-            sku = $("#kode").val();
-            qty = $("#qty").val();
-            lokasi = $("#lokasi").val();
-            pallet = $("#pallet").val();
-            if (notrans == ""){
-                alert("Please select No Transaksi");
-                return false;
-            }else if (sku == ""){
-                alert("Please select SKU");
-                return false;
-            }else if (qty == ""){
-                alert("Please insert Value of Quantity");
-                return false;
-            }else if (lokasi == ""){
-                alert("Please select Lokasi");
-                return false;
-            }else if (pallet == ""){
-                alert("Please insert Value of Pallet");
-                return false;
-            }
-        });
+    $(document).on("click","#ok",function(e){
+        // Validate ifnull
+        noutbound = $("#noutbound").val();
+        pallet = $("#palletid").val();
+        nopo = $("#nopo").val();
+        crtnid = $("#crtnid").val();
+        if (noutbound == ""){
+            alert("Please select No Outbound");
+            return false;
+        }else if (pallet == ""){
+            alert("Please select Pallet ID");
+            return false;
+        }else if (nopo == ""){
+            alert("Please select Nomor PO");
+            return false;
+        }else if (crtnid == ""){
+            alert("Please Insert Value Of Carton ID");
+            return false;
+        }
+    });
 </script>
 @endsection

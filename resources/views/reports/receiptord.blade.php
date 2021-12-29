@@ -86,11 +86,6 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
-                        {{-- <select class="contoh" name="state">
-                            <option></option>
-                            <option value="AL">Alabama</option>
-                            <option value="WY">Wyoming</option>
-                          </select> --}}
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
                         <?php 
@@ -130,7 +125,7 @@
                         <label for="qtycrtn" class="form-label">Total QTY Carton</label>
                         <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
                         <label for="crtnid" class="form-label">Carton ID</label>
-                        <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example">
+                        <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example" onchange="idcarton()">
                         <label for="sat" class="form-label">Satuan</label>
                         <input type="text" class="form-control mb-2" id="sat" value="" name="sat"  aria-label="readonly input example" readonly>
                         <div class="row">
@@ -180,10 +175,6 @@
                     // }
                 },
             });
-        });
-        $('.contoh').select2({
-            placeholder : 'Select Pallet',
-            allowClear : true
         });
         // NO PO Method Baru
         $('.js-nopo').select2({
@@ -339,22 +330,42 @@
             // $("#hdnpallet").val(tempPallet[this.value-1].text);
         });
     });
-    // #finish = Reset all fields
-    // function reset() {
-    //     $('#noinbound').select2('val','');
-    // }
+    // Trigger IDCarton
+    function idcarton() {        
+        // Validate Id Carton
+        var idcarton = $("#crtnid").val();
+        $.ajax({
+            url : '{{ route('getIdCrtn') }}',
+            method : 'post',
+            data : {'idcarton': idcarton},
+            headers : {
+                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+            dataType : 'json',
+            success : function (response){
+                console.log("carton id");
+                console.log(response);
+                for (i=0; i < response.length; i++) {
+                    hasil = response[i].jcrtnid;
+                    if (hasil >= 1){
+                        alert('Data ID Sudah ada BOSS!')
+                        $("#crtnid").val('');
+                    }
+                }                
+            },
+        });
+    }
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
         // $("#noinbound").empty();
-        $("#noinbound").val('').trigger('change')
+        $("#noinbound").val('').trigger('change');
         // $("#noinbound").append("<option value=""></option>");
         document.getElementById('tglTrans').value = "";
         document.getElementById('pemilik').value = "";
         document.getElementById('note').value = "";
-        $("#palletid").val('').trigger('change')
+        $("#palletid").val('').trigger('change');
         // $("#palletid").empty();
         // $("#palletid").append("<option value='0'>--Select Pallet ID--</option>");
-        $("#nopo").val('').trigger('change')
+        $("#nopo").val('').trigger('change');
         // $("#nopo").empty();
         // $("#nopo").append("<option value='0'>--Select No PO--</option>");
         document.getElementById('nama_sku').value = "";

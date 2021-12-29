@@ -42,19 +42,33 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getCQty',[ReceiptOrderController::class, 'getCQty'])->name('getCQty');
 
+    Route::post('/getIdCrtn',[ReceiptOrderController::class, 'getIdCrtn'])->name('getIdCrtn');
+
     Route::get('/insertQty',[ReceiptOrderController::class, 'insertQty'])->name('insertQty');
     // END INBOUND
 
     // OUTBOUND
     Route::get('/outbound',[OutboundController::class, 'index'])->name('index');
 
-    Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
+    Route::post('/getOutbound',[OutboundController::class, 'getOutbound'])->name('getOutbound');
 
-    Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
+    Route::post('/getPalletId',[OutboundController::class, 'getPalletId'])->name('getPalletId');
 
-    Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
+    Route::post('/getCQtyOut',[OutboundController::class, 'getCQtyOut'])->name('getCQtyOut');
 
-    Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
+    Route::post('/getIdCrtnOut',[OutboundController::class, 'getIdCrtnOut'])->name('getIdCrtnOut');
+
+    Route::post('/getPoOutbound',[OutboundController::class, 'getPoOutbound'])->name('getPoOutbound');
+
+    Route::post('/getPoOutbound',[OutboundController::class, 'getPoOutbound'])->name('getPoOutbound');
+
+    // Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
+
+    // Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
+
+    // Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
+
+    Route::get('/insOutbound',[OutboundController::class, 'insOutbound'])->name('insOutbound');
     // END OUTBOUND
 
     // LOKASI

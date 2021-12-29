@@ -40,64 +40,64 @@ class ReceiptOrderController extends Controller
             'inbound'=>$inbound]);
     }
 
-    public function show(Request $request){
+    // public function show(Request $request){
         
         
-        if(isset($request->noTrans)){
-            // dd($request->all());
-            if($request->input('sku')== ''){
-                $notrans = $request->input('noTrans');
-                $alltrecs = DB::table('trec')->where('no','=',$notrans)->get();
-                $sku = DB::table('mitem')->select('code')->get();
-                $skuall = DB::table('mitem')->get();
-                return view('reports.receiptord',[
-                    'alltrecs'=>$alltrecs,
-                    'sku'=>$sku,
-                    'skuall'=>$skuall]);
-            }else{
-                $notrans = $request->input('noTrans');
-                $code = $request->input('code');
-                $alltrecs = DB::table('trec')->where('no','=',$notrans)->get();
-                $valisku = DB::table('mitem')->where('code','=',$code)->get();
-                $sku = DB::table('mitem')->select('code')->get();
-                return view('reports.receiptord',[
-                    'alltrecs'=>$alltrecs,
-                    'valisku'=>$valisku,
-                    'sku'=>$sku]);
-            }
+    //     if(isset($request->noTrans)){
+    //         // dd($request->all());
+    //         if($request->input('sku')== ''){
+    //             $notrans = $request->input('noTrans');
+    //             $alltrecs = DB::table('trec')->where('no','=',$notrans)->get();
+    //             $sku = DB::table('mitem')->select('code')->get();
+    //             $skuall = DB::table('mitem')->get();
+    //             return view('reports.receiptord',[
+    //                 'alltrecs'=>$alltrecs,
+    //                 'sku'=>$sku,
+    //                 'skuall'=>$skuall]);
+    //         }else{
+    //             $notrans = $request->input('noTrans');
+    //             $code = $request->input('code');
+    //             $alltrecs = DB::table('trec')->where('no','=',$notrans)->get();
+    //             $valisku = DB::table('mitem')->where('code','=',$code)->get();
+    //             $sku = DB::table('mitem')->select('code')->get();
+    //             return view('reports.receiptord',[
+    //                 'alltrecs'=>$alltrecs,
+    //                 'valisku'=>$valisku,
+    //                 'sku'=>$sku]);
+    //         }
             
-        }
-    }
+    //     }
+    // }
 
     public function getInbound(){
         $inbound = DB::table('tinbound')->get();
         return json_encode($inbound);
     }
 
-    public function getPallet(Request $request){
-        $searchpallet = $request->searchpallet;
-        if($searchpallet == ''){
-            $kodes = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
-        }else{
-            $kodes = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
-        }
+    // public function getPallet(Request $request){
+    //     $searchpallet = $request->searchpallet;
+    //     if($searchpallet == ''){
+    //         $kodes = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->limit(10)->get();
+    //     }else{
+    //         $kodes = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->where('code', 'like',  '%' .$searchpallet. '%')->limit(10)->get();
+    //     }
 
-        $response = array();
-        foreach($kodes as $kode){
-            $response[] = array(
-                "id"=>$kode->id,
-                "text"=>$kode->code,
-            );
-        }
-        return response()->json($response);
-    }
+    //     $response = array();
+    //     foreach($kodes as $kode){
+    //         $response[] = array(
+    //             "id"=>$kode->id,
+    //             "text"=>$kode->code,
+    //         );
+    //     }
+    //     return response()->json($response);
+    // }
 
-    public function getPalletR(Request $request){
-        $id = $request->input('id');
-        $item = $request->get('nopo');
-        $nopo_r = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->where('id','=',$id)->get();
-        return $nopo_r;
-    }
+    // public function getPalletR(Request $request){
+    //     $id = $request->input('id');
+    //     $item = $request->get('nopo');
+    //     $nopo_r = DB::table('mpallet')->orderby('id','asc')->where('stat','=','1')->where('id','=',$id)->get();
+    //     return $nopo_r;
+    // }
 
     public function getPalletId(Request $request){
         $id = $request->input('id');
@@ -125,6 +125,13 @@ class ReceiptOrderController extends Controller
         return json_encode($kodes);
     }
 
+    public function getIdCrtn(Request $request){
+        $idcarton = $request->idcarton;
+        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->get();
+
+        return json_encode($cartoncount);
+    }
+
     public function insertQty(Request $request){
         // dd($request->all());
         $noinbound = $request->input('noinbound');
@@ -141,6 +148,7 @@ class ReceiptOrderController extends Controller
         foreach($cartoncount as $itemcrtn){
             $hasil = $itemcrtn->jcrtnid; 
         }
+
         // dd($hasil);
         if ($hasil >= 1){
             $pallet = DB::table('mpallet')->get();
@@ -156,8 +164,6 @@ class ReceiptOrderController extends Controller
                 'item_r'=>$item_r,
                 'message_error'=> 'Data carton ID Sudah ada!']);
         }else{
-            // return redirect()->back()->with('error','Data carton ID Sudah ada!',compact('pallet','nopo','inbound','item_r'));
-            // dd($request->all());
             DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
             
             $pallet = DB::table('mpallet')->get();
@@ -173,21 +179,6 @@ class ReceiptOrderController extends Controller
                 'item_r'=>$item_r,
                 'message_success'=>'Data Berhasil Di inputkan']);
         }
-
-        // dd($request->all());
-        // DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
-        
-        // $pallet = DB::table('mpallet')->get();
-        // $nopo = DB::table('tinboundd')->get();
-        // $inbound = DB::table('tinbound')->get();
-        // $item_r = DB::table('tinboundd')->get();
-        // return redirect('/dashboard');
-
-        // return view('reports.receiptord',[
-        //     'pallet'=>$pallet,
-        //     'nopo'=>$nopo,
-        //     'inbound'=>$inbound,
-        //     'item_r'=>$item_r]);
     }
 
     
