@@ -176,7 +176,7 @@
                     var nooutbound = $('#noutbound').val();
                     var nopo = $('#nopo').val();
                     $.ajax({
-                        url : '{{ route('getCQty') }}',
+                        url : '{{ route('getCQtyOut') }}',
                         method : 'post',
                         data : {'nooutbound': nooutbound,
                                 'nopo': nopo},
@@ -184,15 +184,23 @@
                             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                         dataType : 'json',
                         success : function (response){
-                            console.log("noutbound");
-                            console.log(noutbound);
-                            console.log("response inbound");
-                            console.log(response.length);
                             for (i=0; i < response.length; i++) {
-                                $("#qtycount").val(response[i].jumlah);
+                                jmlInput = response[i].jumlah;
                             }
-                            console.log("res CountQty");
-                            console.log(response);
+                            if (jmlInput == null){
+                                $("#qtycount").val(0);
+                            }else{
+                                $("#qtycount").val(jmlInput);
+                            }
+                            // console.log("noutbound");
+                            // console.log(noutbound);
+                            // console.log("response inbound");
+                            // console.log(response.length);
+                            // for (i=0; i < response.length; i++) {
+                            //     $("#qtycount").val(response[i].jumlah);
+                            // }
+                            // console.log("res CountQty");
+                            // console.log(response);
                         },
                     });
                 },

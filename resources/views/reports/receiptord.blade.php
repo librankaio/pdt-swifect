@@ -133,6 +133,7 @@
                                 <form action="">                                
                                     <button type="submit" class="btn btn-primary" id="ok" formaction="{{ route('insertQty') }}">Confirm QTY</button>
                                     <a type="button" class="btn btn-primary" id="finish">Finish</a>
+                                    <button type="submit" class="btn btn-primary" id="ok" formaction="">Print</button>
                                 </form>
                             </div>
                         </div>
@@ -212,22 +213,30 @@
                             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                         dataType : 'json',
                         success : function (response){
-                            console.log("noinbound");
-                            console.log(noinbound);
-                            console.log("response inbound");
-                            console.log(response.length);
                             for (i=0; i < response.length; i++) {
-                                $("#qtycount").val(response[i].jumlah);
+                                jmlInput = response[i].jumlah;
                             }
-                            console.log("res CountQty");
-                            console.log(response);
+                            if (jmlInput == null){
+                                $("#qtycount").val(0);
+                            }else{
+                                $("#qtycount").val(jmlInput);
+                            }
+                            // console.log("noinbound");
+                            // console.log(noinbound);
+                            // console.log("response inbound");
+                            // console.log(response.length);
+                            // for (i=0; i < response.length; i++) {
+                            //     $("#qtycount").val(response[i].jumlah);
+                            // }
+                            // console.log("res CountQty");
+                            // console.log(response);
                         },
                     });
                 },
             });
         });
         $('.js-inbound').select2({
-            placeholder : 'Select Nomor PO',
+            placeholder : 'Select Nomor Inbound',
             allowClear : true,
             initSelection: function(element, callback) {},
         });
@@ -263,15 +272,23 @@
                             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                         dataType : 'json',
                         success : function (response){
-                            console.log("noinbound");
-                            console.log(noinbound);
-                            console.log("response inbound");
-                            console.log(response.length);
                             for (i=0; i < response.length; i++) {
-                                $("#qtycount").val(response[i].jumlah);
+                                jmlInput = response[i].jumlah;
                             }
-                            console.log("res CountQty");
-                            console.log(response);
+                            if (jmlInput == null){
+                                $("#qtycount").val(0);
+                            }else{
+                                $("#qtycount").val(jmlInput);
+                            }
+                            // console.log("noinbound");
+                            // console.log(noinbound);
+                            // console.log("response inbound");
+                            // console.log(response.length);
+                            // for (i=0; i < response.length; i++) {
+                            //     $("#qtycount").val(response[i].jumlah);
+                            // }
+                            // console.log("res CountQty");
+                            // console.log(response);
                         },
                     });
                 },

@@ -82,29 +82,3 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('updlokasi',[LokasiController::class, 'updLokasi'])->name('updlokasi');
 });
-
-// // INBOUND
-// Route::get('/dashboard',[ReceiptOrderController::class, 'index'])->name('index');
-
-// Route::get('/searchtrec',[ReceiptOrderController::class, 'show'])->name('searchtrec');
-
-// Route::post('/getKode',[ReceiptOrderController::class, 'getKode'])->name('getKode');
-
-// Route::post('/getNoTrans',[ReceiptOrderController::class, 'getNoTrans'])->name('getNoTrans');
-
-// Route::post('/getLokasi',[ReceiptOrderController::class, 'getLokasi'])->name('getLokasi');
-
-// Route::get('/updsku',[ReceiptOrderController::class, 'updSKU'])->name('updSKU');
-// // END INBOUND
-
-// // OUTBOUND
-// Route::get('/outbound',[OutboundController::class, 'index'])->name('index');
-
-// Route::post('/getKodeOut',[OutboundController::class, 'getKode'])->name('getKodeOut');
-
-// Route::post('/getNoTransOut',[OutboundController::class, 'getNoTrans'])->name('getNoTransOut');
-
-// Route::post('/getLokasiOut',[OutboundController::class, 'getLokasi'])->name('getLokasiOut');
-
-// Route::get('/updskuOut',[OutboundController::class, 'updSKU'])->name('updSKUOut');
-// // END OUTBOUND
