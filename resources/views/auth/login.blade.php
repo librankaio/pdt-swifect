@@ -23,7 +23,8 @@
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-5 text-center">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                        <h3 class="mb-5">Sign in</h3>
+                        <h3 class="">Warehouse Management System</h3>
+                        <h3 class="mb-3">PT.Good Logistics</h3>
             
                         <div class="form-outline mb-3 text-start">
                             @if(session('flash_message_error'))
@@ -57,6 +58,7 @@
                         <button class="btn btn-primary btn-lg btn-block" style="width:100%;" type="submit">Login</button>
                         <div class="py-2"></div>
                         <hr>
+                        <p class="text-muted">PT.Swifect Solusi Indonesia©</p>
                         {{-- <div class="login-form pt-2">
                             Don't have an account?<a href="">Register Here</a>
                         </div> --}}
