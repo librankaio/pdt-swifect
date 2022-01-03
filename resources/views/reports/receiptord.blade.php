@@ -106,8 +106,6 @@
                             </select>
                         <?php }?>
                     </div>
-                    <label for="palletcap" class="form-label">Pallet Cap.</label>
-                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
                         <select class="form-control js-nopo" id='nopo' name="nopo" >
@@ -118,6 +116,8 @@
                             {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
+                    <label for="palletcap" class="form-label">Pallet Cap.</label>
+                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
                         <label for="nama_sku" class="form-label mt-2">SKU</label>
                         <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
                         <label for="desc" class="form-label">Description</label>
