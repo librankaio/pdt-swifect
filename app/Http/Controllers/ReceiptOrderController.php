@@ -24,6 +24,9 @@ class ReceiptOrderController extends Controller
 
         $item_r = DB::table('tinboundd')->get();
 
+
+        // $pltcapcount = DB::table('tinboundd')->select('pltcap')->where('no_tinbound','=','PKID2-21-7193')->where('nopo','=','AAAA')->where('pallet','=','PL003')->get();
+        // dd($pltcapcount);
         // $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=','928401238490823908230')->get();
 
         // foreach($cartoncount as $itemcrtn){
@@ -132,6 +135,17 @@ class ReceiptOrderController extends Controller
         return json_encode($cartoncount);
     }
 
+    public function getPalletCap(Request $request){
+        $noinbound = $request->noinbound;
+        $nopo = $request->nopo;
+        $palletid = $request->palletid;
+
+
+        $pltcapcount = DB::table('tinboundd')->select('pltcap')->where('no_tinbound','=',$noinbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
+
+        return json_encode($pltcapcount);
+    }
+
     public function insertQty(Request $request){
         // dd($request->all());
         $noinbound = $request->input('noinbound');
@@ -141,6 +155,7 @@ class ReceiptOrderController extends Controller
         $cartonid = $request->input('crtnid');
         $sat = $request->input('sat');
         $desc = $request->input('desc');
+        $palletcap = $request->input('palletcap');
         
         //validate id carton
         $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->get();
@@ -166,6 +181,8 @@ class ReceiptOrderController extends Controller
         }else{
             DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
             
+            DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->update(['pltcap'=> $palletcap]);
+
             $pallet = DB::table('mpallet')->get();
             $nopo = DB::table('tinboundd')->get();
             $inbound = DB::table('tinbound')->get();

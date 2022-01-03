@@ -85,7 +85,7 @@
         <div class="col-sm-6">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="my-2">
+                    <div class="my-2">                    
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
                         <?php 
@@ -106,6 +106,8 @@
                             </select>
                         <?php }?>
                     </div>
+                    <label for="palletcap" class="form-label">Pallet Cap.</label>
+                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
                         <select class="form-control js-nopo" id='nopo' name="nopo" >
@@ -131,9 +133,9 @@
                         <div class="row">
                             <div class="col-sm-12 text-end mb-4">
                                 <form action="">                                
-                                    <button type="submit" class="btn btn-primary" id="ok" formaction="{{ route('insertQty') }}">Confirm QTY</button>
+                                    <button type="submit" class="btn btn-primary" id="confirm" formaction="{{ route('insertQty') }}">Confirm QTY</button>
                                     <a type="button" class="btn btn-primary" id="finish">Finish</a>
-                                    <button type="submit" class="btn btn-primary" id="ok" formaction="">Print</button>
+                                    {{-- <a type="button" class="btn btn-primary" id="finish" onclick="readonly()">Print</a> --}}
                                 </form>
                             </div>
                         </div>
@@ -221,15 +223,45 @@
                             }else{
                                 $("#qtycount").val(jmlInput);
                             }
-                            // console.log("noinbound");
-                            // console.log(noinbound);
-                            // console.log("response inbound");
-                            // console.log(response.length);
-                            // for (i=0; i < response.length; i++) {
-                            //     $("#qtycount").val(response[i].jumlah);
-                            // }
-                            // console.log("res CountQty");
-                            // console.log(response);
+                            palletid = $("#palletid").val();
+                            noinbound = $("#noinbound").val();
+                            nopo = $("#nopo").val();
+                            console.log(noinbound);
+                            console.log(nopo);
+                            console.log(palletid);
+                            $.ajax({
+                                url : '{{ route('getPalletCap') }}',
+                                method : 'post',
+                                data : {'noinbound': noinbound,
+                                        'nopo': nopo,
+                                        'palletid': palletid},
+                                headers : {
+                                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                                dataType : 'json',
+                                success : function (response){
+                                    console.log("Pallet Cap");
+                                    console.log(response);
+                                    for (i=0; i < response.length; i++) {
+                                        jmlpalletcap = response[i].pltcap;
+                                    }
+                                    if (jmlpalletcap == null || jmlpalletcap == 0){
+                                        $("#palletcap").val(0);
+                                        document.getElementById("palletcap").readOnly = false; 
+                                    }else{
+                                        $("#palletcap").val(jmlpalletcap);
+                                        document.getElementById("palletcap").readOnly = true; 
+                                    }
+                                    // console.log("noinbound");
+                                    // console.log(noinbound);
+                                    // console.log("response inbound");
+                                    // console.log(response.length);
+                                    // for (i=0; i < response.length; i++) {
+                                    //     $("#qtycount").val(response[i].jumlah);
+                                    // }
+                                    // console.log("res CountQty");
+                                    // console.log(response);
+                                },
+                            });
                         },
                     });
                 },
@@ -347,6 +379,9 @@
             // $("#hdnpallet").val(tempPallet[this.value-1].text);
         });
     });
+    function readonly(){
+        document.getElementById("crtnid").readOnly = true; 
+    }
     // Trigger IDCarton
     function idcarton() {        
         // Validate Id Carton
@@ -400,31 +435,33 @@
             this.value = this.value.replace(/\D/g, '');
         }
     });
-    $(document).on("click","#ok",function(e){
+
+    $(document).on("click","#confirm",function(e){
         // Validate ifnull
-        notrans = $("#noTrans").val();
-        sku = $("#kode").val();
-        qty = $("#qty").val();
-        lokasi = $("#lokasi").val();
+        noinbound = $("#noinbound").val();
+        nopo = $("#nopo").val();
         pallet = $("#pallet").val();
-        cartonid = $("#crtnid").val();
-        if (notrans == ""){
-            alert("Please select No Transaksi");
-            return false;
-        }else if (sku == ""){
-            alert("Please select SKU");
-            return false;
-        }else if (qty == ""){
-            alert("Please insert Value of Quantity");
-            return false;
-        }else if (lokasi == ""){
-            alert("Please select Lokasi");
+        crtnid = $("#crtnid").val();
+        qtycount = $("#qtycount").val();
+        qtycrtn = $("#qtycrtn").val();
+        palletcap = $("#palletcap").val();
+        if (noinbound == ""){
+            alert("Please select No Inbound");
             return false;
         }else if (pallet == ""){
-            alert("Please insert Value of Pallet");
+            alert("Please select Pallet ID");
             return false;
-        }else if (cartonid == ""){
-            alert("Please insert Value of Id Carton");
+        }else if (nopo == ""){
+            alert("Please select Nomor PO");
+            return false;
+        }else if (crtnid == ""){
+            alert("Please Insert Value Of Carton ID");
+            return false;
+        }else if ( qtycount == qtycrtn){
+            alert("Data Sudah Mencukupi Stock!");
+            return false;
+        }else if ( palletcap == 0 || palletcap == null){
+            alert("Please Insert Value Of Pallet Cap");
             return false;
         }
     });

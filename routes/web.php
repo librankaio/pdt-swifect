@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getCQty',[ReceiptOrderController::class, 'getCQty'])->name('getCQty');
 
+    Route::post('/getPalletCap',[ReceiptOrderController::class, 'getPalletCap'])->name('getPalletCap');
+
     Route::post('/getIdCrtn',[ReceiptOrderController::class, 'getIdCrtn'])->name('getIdCrtn');
 
     Route::get('/insertQty',[ReceiptOrderController::class, 'insertQty'])->name('insertQty');
