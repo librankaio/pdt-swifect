@@ -116,6 +116,8 @@
                         </select>
                     </div>
                     </div>
+                    <label for="palletcap" class="form-label">Pallet Cap.</label>
+                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
                     <label for="nama_sku" class="form-label">SKU</label>
                     <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
                     <label for="desc" class="form-label">Description</label>
@@ -271,15 +273,40 @@
                             }else{
                                 $("#qtycount").val(jmlInput);
                             }
-                            // console.log("nooutbound");
-                            // console.log(nooutbound);
-                            // console.log("response nooutbound");
-                            // console.log(response.length);
-                            // for (i=0; i < response.length; i++) {
-                            //     $("#qtycount").val(response[i].jumlah);
-                            // }
-                            // console.log("res CountQty");
-                            // console.log(response);
+                            palletid = $("#palletid").val();
+                            $.ajax({
+                                url : '{{ route('getPalletCapOut') }}',
+                                method : 'post',
+                                data : {'nooutbound': nooutbound,
+                                        'nopo': nopo,
+                                        'palletid': palletid},
+                                headers : {
+                                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                                dataType : 'json',
+                                success : function (response){
+                                    console.log("Pallet Cap");
+                                    console.log(response);
+                                    // for (i=0; i < response.length; i++) {
+                                    //     jmlpalletcap = response[i].pltcap;
+                                    // }
+                                    // if (jmlpalletcap == null || jmlpalletcap == 0){
+                                    //     $("#palletcap").val(0);
+                                    //     document.getElementById("palletcap").readOnly = false; 
+                                    // }else{
+                                    //     $("#palletcap").val(jmlpalletcap);
+                                    //     document.getElementById("palletcap").readOnly = true; 
+                                    // }
+                                    // console.log("noinbound");
+                                    // console.log(noinbound);
+                                    // console.log("response inbound");
+                                    // console.log(response.length);
+                                    // for (i=0; i < response.length; i++) {
+                                    //     $("#qtycount").val(response[i].jumlah);
+                                    // }
+                                    // console.log("res CountQty");
+                                    // console.log(response);
+                                },
+                            });
                         },
                     });
                 },

@@ -60,6 +60,17 @@ class OutboundController extends Controller
         return json_encode($cartoncount);
     }
 
+    public function getPalletCapOut(Request $request){
+        $nooutbound = $request->nooutbound;
+        $nopo = $request->nopo;
+        $palletid = $request->palletid;
+
+
+        $pltcapcount = DB::table('toutboundd')->select('pltcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
+
+        return json_encode($pltcapcount);
+    }
+
     public function insOutbound(Request $request){
         // dd($request->all());
 

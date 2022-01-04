@@ -128,6 +128,14 @@ class ReceiptOrderController extends Controller
         return json_encode($kodes);
     }
 
+    public function sumQty(Request $request){
+        $noinbound = $request->noinbound;
+        $nopo = $request->nopo;
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
+        
+        return json_encode($kodes);
+    }
+
     public function getIdCrtn(Request $request){
         $idcarton = $request->idcarton;
         $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->get();

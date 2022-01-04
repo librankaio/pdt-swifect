@@ -108,7 +108,7 @@
                     </div>
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
-                        <select class="form-control js-nopo" id='nopo' name="nopo" >
+                        <select class="form-control js-nopo" id='nopo' name="nopo" onchange="qtysum()">
                             <option></option>
                             @foreach($nopo as $itemNopo)
                             <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
@@ -122,8 +122,10 @@
                         <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku"  value="" aria-label="readonly input example" readonly>
                         <label for="desc" class="form-label">Description</label>
                         <input type="text" class="form-control mb-2" id="desc" name="desc"  value="" aria-label="readonly input example" readonly>
-                        <label for="qtycount" class="form-label">Quantity Count</label>
+                        <label for="qtycount" class="form-label">Quantity Count / Pallet</label>
                         <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
+                        <label for="sumqtyin" class="form-label">Total Quantity Count In</label>
+                        <input type="text" class="form-control mb-2" id="sumqtyin" name="sumqtyin"  value="" aria-label="readonly input example" readonly>
                         <label for="qtycrtn" class="form-label">Total QTY Carton</label>
                         <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
                         <label for="crtnid" class="form-label">Carton ID</label>
@@ -405,6 +407,24 @@
                 }                
             },
         });
+    };
+    function qtysum(){
+        var noinbound = $('#noinbound').val();
+        var nopo = $('#nopo').val();
+        $.ajax({
+            url : '{{ route('sumQty') }}',
+            method : 'post',
+            data : {'noinbound': noinbound,
+                    'nopo':nopo},
+            headers : {
+                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+            dataType : 'json',
+            success : function (response){
+                for (i=0; i < response.length; i++) {
+                    $("#sumqtyin").val(response[i].jumlahqty);
+                }           
+            },
+        });
     }
     $(document).on("click","#finish",function(e) {
         e.preventDefault();
@@ -457,8 +477,16 @@
         }else if (crtnid == ""){
             alert("Please Insert Value Of Carton ID");
             return false;
-        }else if ( qtycount == qtycrtn){
+        }else if ( sumqtyin == qtycrtn){
             alert("Data Sudah Mencukupi Stock!");
+            alert("Silahkan pilih data lain!");
+            $("#nopo").val('').trigger('change');
+            document.getElementById('nama_sku').value = "";
+            document.getElementById('desc').value = "";
+            document.getElementById('qtycount').value = "";
+            document.getElementById('qtycrtn').value = "";
+            document.getElementById('crtnid').value = "";
+            document.getElementById('sat').value = "";
             return false;
         }else if ( palletcap == 0 || palletcap == null){
             alert("Please Insert Value Of Pallet Cap");
