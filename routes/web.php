@@ -40,6 +40,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getPo',[ReceiptOrderController::class, 'getPo'])->name('getPo');
 
+    Route::post('/getWhrPO',[ReceiptOrderController::class, 'getWhrPO'])->name('getWhrPO');
+
     Route::post('/getCQty',[ReceiptOrderController::class, 'getCQty'])->name('getCQty');
 
     Route::post('/sumQty',[ReceiptOrderController::class, 'sumQty'])->name('sumQty');

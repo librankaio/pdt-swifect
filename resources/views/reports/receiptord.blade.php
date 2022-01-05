@@ -110,9 +110,9 @@
                     <div class="search-select-box">
                         <select class="form-control js-nopo" id='nopo' name="nopo" onchange="qtysum()">
                             <option></option>
-                            @foreach($nopo as $itemNopo)
+                            {{-- @foreach($nopo as $itemNopo)
                             <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
-                            @endforeach
+                            @endforeach --}}
                             {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
@@ -188,6 +188,7 @@
         });
         $('#nopo').on('select2:select',function (e) {
             var id = $(this).val();
+            var noinbound = $('#noinbound').val();
             $.ajax({
                 url : '{{ route('getPo') }}',
                 method : 'post',
@@ -314,15 +315,35 @@
                             }else{
                                 $("#qtycount").val(jmlInput);
                             }
-                            // console.log("noinbound");
-                            // console.log(noinbound);
-                            // console.log("response inbound");
-                            // console.log(response.length);
-                            // for (i=0; i < response.length; i++) {
-                            //     $("#qtycount").val(response[i].jumlah);
-                            // }
-                            // console.log("res CountQty");
-                            // console.log(response);
+                            $.ajax({
+                            url : '{{ route('getWhrPO') }}',
+                            method : 'post',
+                            data : {'noinbound': noinbound},
+                            headers : {
+                                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                            dataType : 'json',
+                            success : function (response){
+                                // for (i=0; i < response.length; i++) {
+                                //         nopo = response[i].nopo;
+                                //         $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
+
+                                // }
+                                if ($("#noinbound").val() != ""){
+                                    // $("#nopo").val('').trigger('change');
+                                    $("#nopo").empty();
+                                    $("#nopo").append("<option></option>");
+                                    for (i=0; i < response.length; i++) {
+                                        nopo = response[i].nopo;
+                                        $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
+
+                                    }
+                                }else if ($("#noinbound").val() == 0){
+                                    // $("#nopo").val('').trigger('change');
+                                    alert("Data nopo harus kosong!");
+                                }
+                            
+                        },
+                    });
                         },
                     });
                 },

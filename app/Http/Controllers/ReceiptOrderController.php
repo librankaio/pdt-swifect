@@ -114,6 +114,12 @@ class ReceiptOrderController extends Controller
         $nopo_r = DB::table('tinboundd')->orderby('id','asc')->where('stat','=','1')->where('id','=',$id)->get();
         return $nopo_r;
     }
+    public function getWhrPO(Request $request){
+        $noinbound = $request->noinbound;
+        $item_r = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->get();
+        return json_encode($item_r);
+    }
+
     public function getPo(Request $request){
         $id = $request->input('id');
         $item_r = DB::table('tinboundd')->get();
