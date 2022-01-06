@@ -109,10 +109,16 @@
                     <label for="nopo" class="form-label">No PO</label>
                     <div class="search-select-box">
                         <select class="form-control js-nopo" id='nopo' name="nopo" onchange="qtysum()">
+                            <?php 
+                            if(request()->input('nopo') == null){ 
+                            ?>
                             <option></option>
-                            {{-- @foreach($nopo as $itemNopo)
+                            <?php }else{?>
+                            <option></option>
+                            @foreach($nopo as $itemNopo)
                             <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
-                            @endforeach --}}
+                            @endforeach
+                            <?php } ?>
                             {{-- <option value='0'>--Select No PO--</option> --}}
                         </select>
                     </div>
@@ -178,6 +184,51 @@
                     //         console.log(kode);
                     //     }
                     // }
+                    var noinbound = $('#noinbound').val();
+                    var nopo = $('#nopo').val();
+                    var palletid = $("#palletid").val();
+                    $.ajax({
+                        url : '{{ route('getPalletCap') }}',
+                        method : 'post',
+                        data : {'noinbound': noinbound,
+                                'nopo': nopo,
+                                'palletid': palletid},
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                        dataType : 'json',
+                        success : function (response){
+                            console.log("Pallet Cap");
+                            console.log(response);
+                            for (i=0; i < response.length; i++) {
+                                if (response.length == 0){
+                                    // $("#palletcap").val(0);
+                                    // document.getElementById("palletcap").readOnly = false;
+                                    alert("Please select No Inbound");
+                                    return false;
+                                }
+                                jmlpalletcap = response[i].palletcap;
+                            }
+                            // if (jmlpalletcap == null || jmlpalletcap == 0){
+                            //     $("#palletcap").val(0);
+                            //     document.getElementById("palletcap").readOnly = false; 
+                            // }else{
+                            //     $("#palletcap").val(jmlpalletcap);
+                            //     document.getElementById("palletcap").readOnly = true; 
+                            // }
+                            if (jmlpalletcap == null || jmlpalletcap == 0){
+                                $("#palletcap").val(0);
+                                document.getElementById("palletcap").readOnly = false; 
+                            }else if (response.length == 0){
+                                // alert("Please select No Inbound");
+                                // return false;
+                                $("#palletcap").val(0);
+                                document.getElementById("palletcap").readOnly = false;
+                            }else if (jmlpalletcap >= 1){
+                                $("#palletcap").val(jmlpalletcap);
+                                document.getElementById("palletcap").readOnly = true; 
+                            }
+                        },
+                    });
                 },
             });
         });
@@ -245,24 +296,22 @@
                                     console.log("Pallet Cap");
                                     console.log(response);
                                     for (i=0; i < response.length; i++) {
-                                        jmlpalletcap = response[i].pltcap;
+                                        jmlpalletcap = response[i].palletcap;
+                                        if (response.length == 0){
+                                            $("#palletcap").val(0);
+                                            document.getElementById("palletcap").readOnly = false;
+                                        }
                                     }
                                     if (jmlpalletcap == null || jmlpalletcap == 0){
                                         $("#palletcap").val(0);
                                         document.getElementById("palletcap").readOnly = false; 
-                                    }else{
+                                    }else if (response.length == 0){
+                                        $("#palletcap").val(0);
+                                        document.getElementById("palletcap").readOnly = false;
+                                    }else if (jmlpalletcap >= 1){
                                         $("#palletcap").val(jmlpalletcap);
                                         document.getElementById("palletcap").readOnly = true; 
                                     }
-                                    // console.log("noinbound");
-                                    // console.log(noinbound);
-                                    // console.log("response inbound");
-                                    // console.log(response.length);
-                                    // for (i=0; i < response.length; i++) {
-                                    //     $("#qtycount").val(response[i].jumlah);
-                                    // }
-                                    // console.log("res CountQty");
-                                    // console.log(response);
                                 },
                             });
                         },
@@ -287,6 +336,8 @@
                 success : function (response){
                     console.log("res Inbound");
                     console.log(response);
+                    $('#palletcap').val("");
+                    document.getElementById("palletcap").readOnly = false; 
                     for (i=0; i < response.length; i++) {
                         if (response[i].no==id){
                             tgl = response[i].tdate;
@@ -316,34 +367,29 @@
                                 $("#qtycount").val(jmlInput);
                             }
                             $.ajax({
-                            url : '{{ route('getWhrPO') }}',
-                            method : 'post',
-                            data : {'noinbound': noinbound},
-                            headers : {
-                                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
-                            dataType : 'json',
-                            success : function (response){
-                                // for (i=0; i < response.length; i++) {
-                                //         nopo = response[i].nopo;
-                                //         $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
+                                url : '{{ route('getWhrPO') }}',
+                                method : 'post',
+                                data : {'noinbound': noinbound},
+                                headers : {
+                                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                                dataType : 'json',
+                                success : function (response){
+                                    if ($("#noinbound").val() != ""){
+                                        // $("#nopo").val('').trigger('change');
+                                        $("#nopo").empty();
+                                        $("#nopo").append("<option></option>");
+                                        for (i=0; i < response.length; i++) {
+                                            nopo = response[i].nopo;
+                                            $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
 
-                                // }
-                                if ($("#noinbound").val() != ""){
-                                    // $("#nopo").val('').trigger('change');
-                                    $("#nopo").empty();
-                                    $("#nopo").append("<option></option>");
-                                    for (i=0; i < response.length; i++) {
-                                        nopo = response[i].nopo;
-                                        $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
-
+                                        }
+                                    }else if ($("#noinbound").val() == 0){
+                                        // $("#nopo").val('').trigger('change');
+                                        alert("Data nopo harus kosong!");
                                     }
-                                }else if ($("#noinbound").val() == 0){
-                                    // $("#nopo").val('').trigger('change');
-                                    alert("Data nopo harus kosong!");
-                                }
-                            
-                        },
-                    });
+                                
+                                },
+                            });
                         },
                     });
                 },

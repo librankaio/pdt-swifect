@@ -12,6 +12,7 @@ use JavaScript;
 class ReceiptOrderController extends Controller
 {
     public function index(Request $request){
+        $noiboundsubmit = $request->input('noinbound');
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
         $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
@@ -24,7 +25,13 @@ class ReceiptOrderController extends Controller
 
         $item_r = DB::table('tinboundd')->get();
 
+        // $jmlinput = DB::table('tinboundd')->select(DB::raw('count(id) as jmlinput'))->where('no_tinbound','=','PKID2-21-7193')->where('nopo','=','AAAA')->get();
 
+        // foreach($jmlinput as $iteminput){
+        //     $hasil = $iteminput->jmlinput; 
+        // } 
+
+        // dd($hasil);
         // $pltcapcount = DB::table('tinboundd')->select('pltcap')->where('no_tinbound','=','PKID2-21-7193')->where('nopo','=','AAAA')->where('pallet','=','PL003')->get();
         // dd($pltcapcount);
         // $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=','928401238490823908230')->get();
@@ -154,8 +161,7 @@ class ReceiptOrderController extends Controller
         $nopo = $request->nopo;
         $palletid = $request->palletid;
 
-
-        $pltcapcount = DB::table('tinboundd')->select('pltcap')->where('no_tinbound','=',$noinbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
+        $pltcapcount = DB::table('tinboundid')->select('palletcap')->where('no_tinbound','=',$noinbound)->where('nopo','=',$nopo)->where('pallet','=',$palletid)->limit(1)->get();
 
         return json_encode($pltcapcount);
     }
@@ -195,10 +201,11 @@ class ReceiptOrderController extends Controller
         }else{
             DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
             
-            DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->update(['pltcap'=> $palletcap]);
+            DB::table('tinboundid')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->update(['palletcap'=> $palletcap]);
 
             $pallet = DB::table('mpallet')->get();
-            $nopo = DB::table('tinboundd')->get();
+            // $nopo = DB::table('tinboundd')->get();
+            $nopo = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->get();
             $inbound = DB::table('tinbound')->get();
             $item_r = DB::table('tinboundd')->get();
             // return redirect('/dashboard');
