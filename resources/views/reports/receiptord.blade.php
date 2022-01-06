@@ -532,6 +532,7 @@
         qtycount = $("#qtycount").val();
         qtycrtn = $("#qtycrtn").val();
         palletcap = $("#palletcap").val();
+        sumqtyin = $("#sumqtyin").val();
         if (noinbound == ""){
             alert("Please select No Inbound");
             return false;
@@ -546,7 +547,6 @@
             return false;
         }else if ( sumqtyin == qtycrtn){
             alert("Data Sudah Mencukupi Stock!");
-            alert("Silahkan pilih data lain!");
             $("#nopo").val('').trigger('change');
             document.getElementById('nama_sku').value = "";
             document.getElementById('desc').value = "";
@@ -558,6 +558,9 @@
         }else if ( palletcap == 0 || palletcap == null){
             alert("Please Insert Value Of Pallet Cap");
             return false;
+        }else if ( qtycount == palletcap){
+            alert("Silahkan pilih Pallet lain lain!");
+            $("#pallet").val('').trigger('change');
         }
     });
     
