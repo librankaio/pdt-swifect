@@ -564,8 +564,8 @@
         }else if ( qtycount == palletcap){
             alert("Pallet Sudah Penuh!");
             alert("Silahkan Pilih Pallet Lain!");
-            $("#pallet").val('').trigger('change');
             return false;
+            $("#pallet").val('').trigger('change');
         }
     });
     
