@@ -136,7 +136,8 @@ class ReceiptOrderController extends Controller
     public function getCQty(Request $request){
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->get();
+        $palletid = $request->palletid;
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('pallet','=',$palletid)->get();
         
         return json_encode($kodes);
     }

@@ -260,15 +260,18 @@
                     }
                     var noinbound = $('#noinbound').val();
                     var nopo = $('#nopo').val();
+                    var palletid = $('#palletid').val();
                     $.ajax({
                         url : '{{ route('getCQty') }}',
                         method : 'post',
                         data : {'noinbound': noinbound,
-                                'nopo': nopo},
+                                'nopo': nopo,
+                                'palletid': palletid},
                         headers : {
                             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                         dataType : 'json',
                         success : function (response){
+                            console.log(response);
                             for (i=0; i < response.length; i++) {
                                 jmlInput = response[i].jumlah;
                             }
