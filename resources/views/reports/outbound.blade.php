@@ -120,10 +120,12 @@
                     <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
                     <label for="nama_sku" class="form-label">SKU</label>
                     <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
-                    <label for="desc" class="form-label">Description</label>
+                    <label for="desc" class="form-label">Description / Pallet</label>
                     <input type="text" class="form-control mb-2" id="desc" name="desc" value="" aria-label="readonly input example" readonly>
                     <label for="qtycount" class="form-label">Quantity Count</label>
                     <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
+                    <label for="sumqtyout" class="form-label">Total Quantity Count Out</label>
+                    <input type="text" class="form-control mb-2" id="sumqtyout" name="sumqtyout"  value="" aria-label="readonly input example" readonly>
                     <label for="qtycrtn" class="form-label">Total QTY Carton</label>
                     <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
                     <label for="crtnid" class="form-label" >Carton ID</label>

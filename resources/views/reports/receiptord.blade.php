@@ -562,8 +562,10 @@
             alert("Please Insert Value Of Pallet Cap");
             return false;
         }else if ( qtycount == palletcap){
-            alert("Silahkan pilih Pallet lain lain!");
+            alert("Pallet Sudah Penuh!");
+            alert("Silahkan Pilih Pallet Lain!");
             $("#pallet").val('').trigger('change');
+            return false;
         }
     });
     
