@@ -201,26 +201,16 @@
                             console.log(response);
                             for (i=0; i < response.length; i++) {
                                 if (response.length == 0){
-                                    // $("#palletcap").val(0);
-                                    // document.getElementById("palletcap").readOnly = false;
-                                    alert("Please select No Inbound");
-                                    return false;
+                                    $("#palletcap").val(0);
+                                    document.getElementById("palletcap").readOnly = false;
                                 }
                                 jmlpalletcap = response[i].palletcap;
                             }
-                            // if (jmlpalletcap == null || jmlpalletcap == 0){
-                            //     $("#palletcap").val(0);
-                            //     document.getElementById("palletcap").readOnly = false; 
-                            // }else{
-                            //     $("#palletcap").val(jmlpalletcap);
-                            //     document.getElementById("palletcap").readOnly = true; 
                             // }
                             if (jmlpalletcap == null || jmlpalletcap == 0){
                                 $("#palletcap").val(0);
                                 document.getElementById("palletcap").readOnly = false; 
                             }else if (response.length == 0){
-                                // alert("Please select No Inbound");
-                                // return false;
                                 $("#palletcap").val(0);
                                 document.getElementById("palletcap").readOnly = false;
                             }else if (jmlpalletcap >= 1){
@@ -530,7 +520,7 @@
         // Validate ifnull
         noinbound = $("#noinbound").val();
         nopo = $("#nopo").val();
-        pallet = $("#pallet").val();
+        pallet = $("#palletid").val();
         crtnid = $("#crtnid").val();
         qtycount = $("#qtycount").val();
         qtycrtn = $("#qtycrtn").val();
@@ -564,8 +554,8 @@
         }else if ( qtycount == palletcap){
             alert("Pallet Sudah Penuh!");
             alert("Silahkan Pilih Pallet Lain!");
-            return false;
-            $("#pallet").val('').trigger('change');
+            $("#palletid").val('').trigger('change');
+            return false;            
         }
     });
     
