@@ -85,19 +85,29 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
+                        <label for="nopo" class="form-label">No PO</label>
+                        <div class="search-select-box">
+                            <select class="form-control js-nopo" id='nopo' name="nopo" >
+                                <option></option>
+                                @foreach($nopo as $itemNopo)
+                                <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
+                                @endforeach
+                                {{-- <option value='0'>--Select No PO--</option> --}}
+                            </select>
+                        </div>
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
                         <?php 
                             if(request()->input('pallet') == null){ 
                         ?>
-                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                            <select class="form-control js-pallet" id='palletid' name="pallet" onchange="qtysumout()">
                                 <option></option>
-                                @foreach($pallet as $itemPallet)
+                                {{-- @foreach($pallet as $itemPallet)
                                 <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         <?php }else{?>
-                            <select class="form-control js-pallet" id='palletid' name="pallet">
+                            <select class="form-control js-pallet" id='palletid' name="pallet" onchange="qtysumout()">
                                 <option value="{{ $_GET['pallet'] }}">{{ $_GET['pallet'] }}</option>
                                 @foreach($pallet as $itemPallet)
                                 <option value="{{ $itemPallet->code }}">{{ $itemPallet->code }}</option>
@@ -105,24 +115,14 @@
                             </select>
                         <?php }?>
                     </div>
-                    <label for="nopo" class="form-label">No PO</label>
-                    <div class="search-select-box">
-                        <select class="form-control js-nopo" id='nopo' name="nopo" >
-                            <option></option>
-                            @foreach($nopo as $itemNopo)
-                            <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
-                            @endforeach
-                            {{-- <option value='0'>--Select No PO--</option> --}}
-                        </select>
                     </div>
-                    </div>
-                    <label for="palletcap" class="form-label">Pallet Cap.</label>
-                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange="">
+                    {{-- <label for="palletcap" class="form-label">Pallet Cap.</label>
+                    <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange=""> --}}
                     <label for="nama_sku" class="form-label">SKU</label>
                     <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
-                    <label for="desc" class="form-label">Description / Pallet</label>
+                    <label for="desc" class="form-label">Description</label>
                     <input type="text" class="form-control mb-2" id="desc" name="desc" value="" aria-label="readonly input example" readonly>
-                    <label for="qtycount" class="form-label">Quantity Count</label>
+                    <label for="qtycount" class="form-label">Quantity Count / Pallet</label>
                     <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
                     <label for="sumqtyout" class="form-label">Total Quantity Count Out</label>
                     <input type="text" class="form-control mb-2" id="sumqtyout" name="sumqtyout"  value="" aria-label="readonly input example" readonly>
@@ -177,12 +177,13 @@
                             $("#note").val(response[i].note);
                         }
                     }
+                    var pallet = $("#palletid").val();
                     var nooutbound = $('#noutbound').val();
                     var nopo = $('#nopo').val();
                     $.ajax({
                         url : '{{ route('getCQtyOut') }}',
                         method : 'post',
-                        data : {'nooutbound': nooutbound,
+                        data : {'pallet': pallet,
                                 'nopo': nopo},
                         headers : {
                             'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
@@ -214,20 +215,32 @@
             placeholder : 'Select Pallet',
             allowClear : true
         });
+        var nopo = $("#nopo").val();
+        console.log(nopo);
         $('#palletid').on('select2:select',function (e) {
-            var id = $(this).val();
-            console.log("isi ID");
-            console.log(id);
+            var pallet = $(this).val();
+            console.log("isi Pallet");
+            console.log(pallet);
+            var pallet = $("#palletid").val();
+            var nooutbound = $('#noutbound').val();
+            var nopo = $('#nopo').val();
             $.ajax({
-                url : '{{ route('getPalletId') }}',
+                url : '{{ route('getCQtyOut') }}',
                 method : 'post',
-                data : {'id' : id},
+                data : {'pallet': pallet,
+                        'nopo': nopo},
                 headers : {
                     'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                 dataType : 'json',
-                success : function (response) {
-                    console.log("response Pallet");
-                    console.log(response);
+                success : function (response){
+                    for (i=0; i < response.length; i++) {
+                        jmlInput = response[i].jumlah;
+                    }
+                    if (jmlInput == null){
+                        $("#qtycount").val(0);
+                    }else{
+                        $("#qtycount").val(jmlInput);
+                    }
                 },
             });
         });
@@ -288,25 +301,40 @@
                                 success : function (response){
                                     console.log("Pallet Cap");
                                     console.log(response);
-                                    // for (i=0; i < response.length; i++) {
-                                    //     jmlpalletcap = response[i].pltcap;
-                                    // }
-                                    // if (jmlpalletcap == null || jmlpalletcap == 0){
-                                    //     $("#palletcap").val(0);
-                                    //     document.getElementById("palletcap").readOnly = false; 
-                                    // }else{
-                                    //     $("#palletcap").val(jmlpalletcap);
-                                    //     document.getElementById("palletcap").readOnly = true; 
-                                    // }
-                                    // console.log("noinbound");
-                                    // console.log(noinbound);
-                                    // console.log("response inbound");
-                                    // console.log(response.length);
-                                    // for (i=0; i < response.length; i++) {
-                                    //     $("#qtycount").val(response[i].jumlah);
-                                    // }
-                                    // console.log("res CountQty");
-                                    // console.log(response);
+                                    $.ajax({
+                                        url : '{{ route('getPalletOut') }}',
+                                        method : 'post',
+                                        data : {'nopo' : nopo},
+                                        headers : {
+                                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                                        dataType : 'json',
+                                        success : function (response) {
+                                            console.log("Response Pallet");
+                                            console.log(response);
+                                            if ($("#nopo").val() != ""){
+                                                // $("#nopo").val('').trigger('change');
+                                                $("#palletid").empty();
+                                                $("#palletid").append("<option></option>");
+                                                for (i=0; i < response.length; i++) {
+                                                    console.log("response Pallet")
+                                                    console.log(response)
+                                                    pallet = response[i].pallet;
+                                                    $("#palletid").append("<option value='"+pallet+"'>"+pallet+"</option>");
+
+                                                }
+                                            }else if ($("#nopo").val() == 0){
+                                                // $("#nopo").val('').trigger('change');
+                                                alert("Data nopo harus kosong!");
+                                            }
+                                            // for (i=0; i < response.length; i++) {
+                                            //     nopo = response[i].nopo;
+                                            //     $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
+
+                                            // }
+                                            console.log("response Pallet");
+                                            console.log(response);
+                                        },
+                                    });
                                 },
                             });
                         },
@@ -337,6 +365,24 @@
                         $("#crtnid").val('');
                     }
                 }                
+            },
+        });
+    }
+    function qtysumout(){
+        var pallet = $('#palletid').val();
+        var nopo = $('#nopo').val();
+        $.ajax({
+            url : '{{ route('sumQtyOut') }}',
+            method : 'post',
+            data : {'pallet': pallet,
+                    'nopo':nopo},
+            headers : {
+                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+            dataType : 'json',
+            success : function (response){
+                for (i=0; i < response.length; i++) {
+                    $("#sumqtyout").val(response[i].jumlahqty);
+                }           
             },
         });
     }

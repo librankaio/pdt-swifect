@@ -14,7 +14,7 @@ class OutboundController extends Controller
 
         $pallet = DB::table('mpallet')->get();
         
-        $nopo = DB::table('toutboundd')->get();
+        $nopo = DB::table('tinboundd')->get();
 
         $outbound = DB::table('toutbound')->get();
 
@@ -41,14 +41,14 @@ class OutboundController extends Controller
 
     public function getPoOutbound(Request $request){
         // $id = $request->input('id');
-        $item_r = DB::table('toutboundd')->get();
+        $item_r = DB::table('tinboundd')->get();
         return json_encode($item_r);
     }
 
     public function getCQtyOut(Request $request){
-        $nooutbound = $request->nooutbound;
+        $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('toutboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_toutbound','=',$nooutbound)->get();
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
         
         return json_encode($kodes);
     }
@@ -69,6 +69,21 @@ class OutboundController extends Controller
         $pltcapcount = DB::table('toutboundd')->select('pltcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
 
         return json_encode($pltcapcount);
+    }
+
+    public function sumQtyOut(Request $request){
+        $pallet = $request->pallet;
+        $nopo = $request->nopo;
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
+        
+        return json_encode($kodes);
+    }
+
+    public function getPalletOut(Request $request){
+        $nopo = $request->nopo;
+        $palletout = DB::table('tinboundid')->select('pallet')->where('nopo','=',$nopo)->groupBy('pallet')->get();
+
+        return json_encode($palletout);
     }
 
     public function insOutbound(Request $request){

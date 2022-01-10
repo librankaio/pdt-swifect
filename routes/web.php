@@ -64,6 +64,10 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/getPalletCapOut',[OutboundController::class, 'getPalletCapOut'])->name('getPalletCapOut');
 
+    Route::post('/sumQtyOut',[OutboundController::class, 'sumQtyOut'])->name('sumQtyOut');
+
+    Route::post('/getPalletOut',[OutboundController::class, 'getPalletOut'])->name('getPalletOut');
+
     Route::post('/getIdCrtnOut',[OutboundController::class, 'getIdCrtnOut'])->name('getIdCrtnOut');
 
     Route::post('/getPoOutbound',[OutboundController::class, 'getPoOutbound'])->name('getPoOutbound');
