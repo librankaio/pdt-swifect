@@ -87,6 +87,9 @@
                     <div class="my-2">
                         <label for="nopo" class="form-label">No PO</label>
                         <div class="search-select-box">
+                        <?php 
+                            if(request()->input('nopo') == null){ 
+                        ?>
                             <select class="form-control js-nopo" id='nopo' name="nopo" >
                                 <option></option>
                                 @foreach($nopo as $itemNopo)
@@ -94,6 +97,15 @@
                                 @endforeach
                                 {{-- <option value='0'>--Select No PO--</option> --}}
                             </select>
+                        <?php }else{?>
+                            <select class="form-control js-nopo" id='nopo' name="nopo" >
+                                <option value="{{ $_GET['nopo'] }}">{{ $_GET['nopo'] }}</option>
+                                @foreach($nopo as $itemNopo)
+                                <option value="{{ $itemNopo->nopo }}">{{ $itemNopo->nopo }}</option>
+                                @endforeach
+                                {{-- <option value='0'>--Select No PO--</option> --}}
+                            </select>
+                        <?php }?>
                         </div>
                     <label for="palletid" class="form-label">Pallet ID</label>
                     <div class="search-select-box">
@@ -119,19 +131,65 @@
                     {{-- <label for="palletcap" class="form-label">Pallet Cap.</label>
                     <input type="text" class="form-control mb-2" id="palletcap" name="palletcap" aria-label="readonly input example" onchange=""> --}}
                     <label for="nama_sku" class="form-label">SKU</label>
-                    <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
+                    <?php 
+                            if(request()->input('nama_sku') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="nama_sku" name="nama_sku" value="{{ $_GET['nama_sku'] }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <label for="desc" class="form-label">Description</label>
-                    <input type="text" class="form-control mb-2" id="desc" name="desc" value="" aria-label="readonly input example" readonly>
+                    <?php 
+                        if(request()->input('desc') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="desc" name="desc" value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="desc" name="desc" value="{{ $_GET['desc'] }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <label for="qtycount" class="form-label">Quantity Count / Pallet</label>
-                    <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
+                    @php 
+                    if (isset($_GET['qtycount'])){
+                        $qtycount = $_GET['qtycount']; 
+                    }
+                    @endphp
+                    <?php 
+                        if(request()->input('qtycount') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="qtycount" name="qtycount"  value="{{ $qtycount-1 }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <label for="sumqtyout" class="form-label">Total Quantity Count Out</label>
-                    <input type="text" class="form-control mb-2" id="sumqtyout" name="sumqtyout"  value="" aria-label="readonly input example" readonly>
+                    @php 
+                    if (isset($_GET['sumqtyout'])){
+                        $sumqtyout = $_GET['sumqtyout']; 
+                    }
+                    @endphp
+                    <?php 
+                        if(request()->input('sumqtyout') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="sumqtyout" name="sumqtyout"  value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="sumqtyout" name="sumqtyout"  value="{{ $sumqtyout-1 }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <label for="qtycrtn" class="form-label">Total QTY Carton</label>
-                    <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
+                    <?php 
+                        if(request()->input('qtycrtn') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="qtycrtn" name="qtycrtn" value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="qtycrtn" name="qtycrtn" value="{{ $_GET['qtycrtn'] }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <label for="crtnid" class="form-label" >Carton ID</label>
                     <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example" onchange="idcarton()">
                     <label for="sat" class="form-label">Satuan</label>
-                    <input type="text" class="form-control mb-2" id="sat" name="sat" value="" aria-label="readonly input example" readonly>
+                    <?php 
+                        if(request()->input('sat') == null){ 
+                    ?>
+                        <input type="text" class="form-control mb-2" id="sat" name="sat" value="" aria-label="readonly input example" readonly>
+                    <?php }else{?>
+                        <input type="text" class="form-control mb-2" id="sat" name="sat" value="{{ $_GET['sat'] }}" aria-label="readonly input example" readonly>
+                    <?php }?>
                     <div class="row">
                         <div class="col-sm-12 text-end mb-4">
                             <form action="">                                
@@ -323,14 +381,24 @@
 
                                                 }
                                             }else if ($("#nopo").val() == 0){
-                                                // $("#nopo").val('').trigger('change');
                                                 alert("Data nopo harus kosong!");
                                             }
-                                            // for (i=0; i < response.length; i++) {
-                                            //     nopo = response[i].nopo;
-                                            //     $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
-
-                                            // }
+                                            var pallet = $('#palletid').val();
+                                            var nopo = $('#nopo').val();
+                                            $.ajax({
+                                                url : '{{ route('sumQtyOut') }}',
+                                                method : 'post',
+                                                data : {'pallet': pallet,
+                                                        'nopo':nopo},
+                                                headers : {
+                                                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                                                dataType : 'json',
+                                                success : function (response){
+                                                    for (i=0; i < response.length; i++) {
+                                                        $("#sumqtyout").val(response[i].jumlahqty);
+                                                    }           
+                                                },
+                                            });
                                             console.log("response Pallet");
                                             console.log(response);
                                         },

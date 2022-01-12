@@ -11,27 +11,24 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="sku" class="form-label">SKU</label>
+                            <label for="nopo" class="form-label">No PO</label>
                             <?php 
-                            if(request()->input('sku') == 0){ 
+                            if(request()->input('nopo') == 0){ 
                             ?>
-                            <select type="text" class="form-control mb-2 select-trans" id="sku" onchange="" name="sku">
-                                <option value=''>--Select SKU--</option>
+                            <select type="text" class="form-control mb-2 select-trans js-nopo" id="nopo" onchange="" name="nopo">
+                                <option></option>
+                                @foreach($nopo as $itemnopo)
+                                <option value="{{ $itemnopo->nopo }}">{{ $itemnopo->nopo }}</option>
+                                @endforeach
                             </select>
                             <?php }else{?>
-                            <select type="text" class="form-control mb-2 select-trans" id="sku" onchange="" name="sku">
-                                <option value='{{ $_GET['sku'] }}'>{{ $_GET['hdnsku'] }}</option>
+                            <select type="text" class="form-control mb-2 select-trans js-nopo" id="nopo" onchange="" name="nopo">
+                                <option value='{{ $_GET['nopo'] }}'>{{ $_GET['nopo'] }}</option>
+                                @foreach($nopo as $itemnopo)
+                                <option value="{{ $itemnopo->nopo }}">{{ $itemnopo->nopo }}</option>
+                                @endforeach
                             </select>
                             <?php } ?>
-                            {{-- Hidden SKU --}}
-                            <?php 
-                            if(request()->input('hdnsku') == null){ 
-                            ?>
-                                <input type="hidden" class="form-control mb-2" id="hdnsku" value="" name="hdnsku" aria-label="readonly input example" readonly>
-                            <?php }else{?>
-                                <input type="hidden" class="form-control mb-2" id="hdnsku" value="{{ $_GET['hdnsku'] }}" name="hdnsku" aria-label="readonly input example" readonly>
-                            <?php } ?>
-                            {{-- END Hidden SKU --}}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -45,13 +42,31 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="desc" class="form-label">Description</label>
+                            <label for="pallet" class="form-label">No Pallet</label>
                             <?php 
-                            if(request()->input('desc') == null){ 
+                            if(request()->input('pallet') == 0){ 
                             ?>
-                                <input type="text" class="form-control mb-2" id="desc" aria-label="readonly input example" value="" name="desc" readonly>
+                                <select type="text" class="form-control mb-2 select-trans js-pallet" id="palletid" onchange="" name="pallet">
+                                    <option></option>
+                                    @foreach($pallet as $itempallet)
+                                    <option value="{{ $itempallet->code }}">{{ $itempallet->code }}</option>
+                                    @endforeach
+                                </select>
                             <?php }else{?>
-                                <input type="text" class="form-control mb-2" id="desc" aria-label="readonly input example" value="{{ $_GET['desc'] }}" name="desc" readonly>
+                                <select type="text" class="form-control mb-2 select-trans js-pallet" id="pallet" onchange="" name="pallet">
+                                    <option value='{{ $_GET['pallet'] }}'>{{ $_GET['pallet'] }}</option>
+                                    @foreach($pallet as $itempallet)
+                                    <option value="{{ $itempallet->code }}">{{ $itempallet->code }}</option>
+                                    @endforeach
+                                </select>
+                            <?php } ?>
+                            <label for="qtycrtn" class="form-label mt-2">Quantity Carton</label>
+                            <?php 
+                            if(request()->input('qtycrtn') == null){ 
+                            ?>
+                                <input type="text" class="form-control mb-2" id="qtycrtn" aria-label="readonly input example" value="" name="qtycrtn" readonly>
+                            <?php }else{?>
+                                <input type="text" class="form-control mb-2" id="qtycrtn" aria-label="readonly input example" value="{{ $_GET['qtycrtn'] }}" name="qtycrtn" readonly>
                             <?php } ?>
                         </div>
                     </div>
@@ -67,56 +82,24 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="my-2">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="text" class="form-control mb-2" id="quantity" value="" aria-label="readonly input example" name="quantity" readonly>
-                    <label for="sat" class="form-label">Satuan</label>
-                    <input type="text" class="form-control mb-2" id="sat" value="" aria-label="readonly input example" readonly>
-                    <label for="noinbound" class="form-label">No Inbound / Transaction</label>
-                    <?php 
-                    if(request()->input('noinbound') == 0){ 
-                    ?>
-                    <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
-                        <option value=''>--Select No Trans--</option>
-                    </select>
-                    <?php }else{?>
-                    <select type="text" class="form-control mb-2 select-trans" id="noinbound" onchange="" name="noinbound">
-                        <option value='{{ $_GET['noinbound'] }}'>{{ $_GET['hdnnoinbound'] }}</option>
-                    </select>
-                    <?php } ?>
-                    {{-- Hidden noinbound --}}
-                    <?php 
-                    if(request()->input('hdnnoinbound') == null){ 
-                    ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="" name="hdnnoinbound" aria-label="readonly input example" readonly>
-                    <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnnoinbound" value="{{ $_GET['hdnnoinbound'] }}" name="hdnnoinbound" aria-label="readonly input example" readonly>
-                    <?php } ?>
-                    {{-- END Hidden noinbound --}}
-                    <label for="owner" class="form-label">Owner</label>
-                    <input type="text" class="form-control mb-2" id="owner" name="owner" readonly>
-                    <label for="pallet" class="form-label">Pallet</label>
-                    <input type="text" class="form-control mb-2" id="pallet" value="" name="pallet">
                     <label for="lokasi" class="form-label mt-2">Lokasi</label>
                     <?php 
                     if(request()->input('lokasi') == null){ 
                     ?>
-                    <select type="text" class="form-control mb-2 select-trans" id="lokasi" onchange="" name="lokasi">
-                        <option value=''>--Select Lokasi--</option>
+                    <select type="text" class="form-control mb-2 select-trans js-lokasi" id="lokasi" onchange="" name="lokasi">
+                        <option></option>
+                        @foreach($lokasi as $itemlokasi)
+                        <option value="{{ $itemlokasi->code_mwhse }}">{{ $itemlokasi->code_mwhse }}</option>
+                        @endforeach
                     </select>
                     <?php }else{?>
-                    <select type="text" class="form-control mb-2 select-trans" id="lokasi" onchange="" name="lokasi">
-                        <option value='0'>{{ $_GET['hdnlok'] }}</option>
+                    <select type="text" class="form-control mb-2 select-trans js-lokasi" id="lokasi" onchange="" name="lokasi">
+                        <option value={{ $_GET['lokasi'] }}>{{ $_GET['lokasi'] }}</option>
+                        @foreach($lokasi as $itemlokasi)
+                        <option value="{{ $itemlokasi->code_mwhse }}">{{ $itemlokasi->code_mwhse }}</option>
+                        @endforeach
                     </select>
                     <?php } ?>
-                    {{-- Hidden noinbound --}}
-                    <?php 
-                    if(request()->input('hdnlok') == null){ 
-                    ?>
-                        <input type="hidden" class="form-control mb-2" id="hdnlok" value="" name="hdnlok" aria-label="readonly input example" readonly>
-                    <?php }else{?>
-                        <input type="hidden" class="form-control mb-2" id="hdnlok" value="{{ $_GET['hdnlok'] }}" name="hdnlok" aria-label="readonly input example" readonly>
-                    <?php } ?>
-                    {{-- END Hidden noinbound --}}
                     <div class="row">
                         <div class="col-sm-12 text-end mb-4">
                             <form action="">      
@@ -132,95 +115,181 @@
 </form>
 {{-- Bot Script --}}
 <script type="text/javascript">
-
+    //CSRF TOKEN
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
-        var tempSku= [];
-        var tempIndbound= [];
-        var tempLok = [];
-        var selectedLok = null;
-        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        // #SKU
-        $("#sku").select2({
-            ajax: {
-                url: "{{route('getsku')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchsku : params.term, //search term
-                    };
-                },
-                processResults: function (response) {
-                    tempSku = response
-                    console.log(tempSku);
-                    return {
-                        results: tempSku
-                    };
-                },
-                cache: true
-            }
+        $('.js-pallet').select2({
+            placeholder : 'Select Pallet',
+            allowClear : true
         });
-        $("#sku").change(function (e) {
-            $("#hdnsku").val(tempSku[this.value-1].text);
-            $("#desc").val(tempSku[this.value-1].nama);
-            $("#sat").val(tempSku[this.value-1].sat);
+        var nopo = $('#nopo').val();
+        $('#palletid').on('select2:select',function (e) {
+            pallet = $(this).val();
+            $.ajax({
+                url : '{{ route('getQtycCrtn') }}',
+                method : 'post',
+                data : {'pallet' : pallet,
+                        'nopo' : nopo},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response) {
+                    console.log("response");
+                    console.log(response);
+                    for (i=0; i < response.length; i++) {
+                        $("#qtycrtn").val(parseInt(response[i].qty));
+                    }
+                }
+            });
         });
-        $("#noinbound").select2({
-            ajax: {
-                url: "{{route('getinbound')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchindbound : params.term, //search term
-                    };
-                },
-                processResults: function (response) {
-                    tempIndbound = response
-                    console.log(tempIndbound);
-                    return {
-                        results: tempIndbound
-                    };
-                },
-                cache: true
-            }
+
+        $('.js-nopo').select2({
+            placeholder : 'Select No PO',
+            allowClear : true
         });
-        $("#noinbound").change(function (e) {
-            $("#hdnnoinbound").val(tempIndbound[this.value-1].text);
-            $("#owner").val(tempIndbound[this.value-1].nama);
+        pallet = $('#palletid').val();
+        $('#nopo').on('select2:select',function (e) {
+            nopo = $(this).val()
+            $.ajax({
+                url : '{{ route('getPalletLok') }}',
+                method : 'post',
+                data : {'nopo' : nopo},
+                headers : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                dataType : 'json',
+                success : function (response) {
+                    console.log("response");
+                    console.log(response);
+                    if ($("#nopo").val() != ""){
+                        // $("#nopo").val('').trigger('change');
+                        $("#palletid").empty();
+                        $("#palletid").append("<option></option>");
+                        $("#qtycrtn").val(0);
+                        for (i=0; i < response.length; i++) {
+                            console.log("response Pallet")
+                            console.log(response)
+                            pallet = response[i].pallet;
+                            $("#palletid").append("<option value='"+pallet+"'>"+pallet+"</option>");
+
+                        }
+                    }else if ($("#nopo").val() == 0){
+                        alert("Data nopo harus kosong!");
+                    }
+                    $.ajax({
+                    url : '{{ route('getQtycCrtn') }}',
+                    method : 'post',
+                    data : {'pallet' : pallet,
+                            'nopo' : nopo},
+                    headers : {
+                        'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
+                    dataType : 'json',
+                    success : function (response) {
+                        // console.log("response");
+                        // console.log(response);
+                        // for (i=0; i < response.length; i++) {
+                        //     $("#qtycrtn").val(parseInt(response[i].qty));
+                        // }
+                    }
+                });
+                }
+            });
         });
-        $("#lokasi").select2({
-            ajax: {
-                url: "{{route('getlokasi')}}",
-                type: "post",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return {
-                        _token: CSRF_TOKEN,
-                        searchlok : params.term, //search term
-                    };
-                },
-                processResults: function (response) {
-                    tempLok = response
-                    console.log(tempLok);
-                    return {
-                        results: tempLok
-                    };
-                },
-                cache: true
-            }
+
+        $('.js-lokasi').select2({
+            placeholder : 'Select Lokasi',
+            allowClear : true
         });
-        $("#lokasi").change(function (e) {
-            selectedLok = tempLok[this.value-1].text;
-            console.log(selectedLok);
-            $("#hdnlok").val(selectedLok);
-            // $("#hdnlok").val(tempLok[this.value-1].text);
+
+        $('#lokasi').on('select2:select',function (e) {
+            
         });
+        // var tempSku= [];
+        // var tempIndbound= [];
+        // var tempLok = [];
+        // var selectedLok = null;
+        // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        // // #SKU
+        // $("#sku").select2({
+        //     ajax: {
+        //         url: "{{route('getsku')}}",
+        //         type: "post",
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: function (params) {
+        //             return {
+        //                 _token: CSRF_TOKEN,
+        //                 searchsku : params.term, //search term
+        //             };
+        //         },
+        //         processResults: function (response) {
+        //             tempSku = response
+        //             console.log(tempSku);
+        //             return {
+        //                 results: tempSku
+        //             };
+        //         },
+        //         cache: true
+        //     }
+        // });
+        // $("#sku").change(function (e) {
+        //     $("#hdnsku").val(tempSku[this.value-1].text);
+        //     $("#desc").val(tempSku[this.value-1].nama);
+        //     $("#sat").val(tempSku[this.value-1].sat);
+        // });
+        // $("#noinbound").select2({
+        //     ajax: {
+        //         url: "{{route('getinbound')}}",
+        //         type: "post",
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: function (params) {
+        //             return {
+        //                 _token: CSRF_TOKEN,
+        //                 searchindbound : params.term, //search term
+        //             };
+        //         },
+        //         processResults: function (response) {
+        //             tempIndbound = response
+        //             console.log(tempIndbound);
+        //             return {
+        //                 results: tempIndbound
+        //             };
+        //         },
+        //         cache: true
+        //     }
+        // });
+        // $("#noinbound").change(function (e) {
+        //     $("#hdnnoinbound").val(tempIndbound[this.value-1].text);
+        //     $("#owner").val(tempIndbound[this.value-1].nama);
+        // });
+        // $("#lokasi").select2({
+        //     ajax: {
+        //         url: "{{route('getlokasi')}}",
+        //         type: "post",
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: function (params) {
+        //             return {
+        //                 _token: CSRF_TOKEN,
+        //                 searchlok : params.term, //search term
+        //             };
+        //         },
+        //         processResults: function (response) {
+        //             tempLok = response
+        //             console.log(tempLok);
+        //             return {
+        //                 results: tempLok
+        //             };
+        //         },
+        //         cache: true
+        //     }
+        // });
+        // $("#lokasi").change(function (e) {
+        //     selectedLok = tempLok[this.value-1].text;
+        //     console.log(selectedLok);
+        //     $("#hdnlok").val(selectedLok);
+        //     // $("#hdnlok").val(tempLok[this.value-1].text);
+        // });
     });
 </script>
 {{-- END Bot Script --}}

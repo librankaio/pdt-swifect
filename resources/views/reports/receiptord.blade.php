@@ -179,9 +179,9 @@
                         <?php 
                             if(request()->input('qtycrtn') == null){ 
                         ?>
-                            <input type="text" class="form-control mb-2" id="qtycrtn"   value="" aria-label="readonly input example" readonly>
+                            <input type="text" class="form-control mb-2" id="qtycrtn" name="qtycrtn"  value="" aria-label="readonly input example" readonly>
                         <?php }else{?>
-                            <input type="text" class="form-control mb-2" id="qtycrtn"   value="{{ $_GET['qtycrtn'] }}" aria-label="readonly input example" readonly>
+                            <input type="text" class="form-control mb-2" id="qtycrtn" name="qtycrtn"  value="{{ $_GET['qtycrtn'] }}" aria-label="readonly input example" readonly>
                         <?php }?> 
                         <label for="crtnid" class="form-label">Carton ID</label>
                         <?php 
@@ -197,7 +197,7 @@
                         ?>
                             <input type="text" class="form-control mb-2" id="sat" value="" name="sat"  aria-label="readonly input example" readonly>
                         <?php }else{?>
-                            <input type="text" class="form-control mb-2" id="sat" value="" name="sat"  aria-label="readonly input example" readonly>
+                            <input type="text" class="form-control mb-2" id="sat" value="{{ $_GET['sat'] }}" name="sat"  aria-label="readonly input example" readonly>
                         <?php }?>
                         <div class="row">
                             <div class="col-sm-12 text-end mb-4">

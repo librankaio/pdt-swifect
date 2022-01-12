@@ -8,7 +8,33 @@ use Illuminate\Support\Facades\DB;
 class LokasiController extends Controller
 {
     public function index(){
-        return view('reports.lokasi');
+        $pallet = DB::table('mpallet')->get();
+
+        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+
+        $lokasi = DB::table('mwhse')->get();
+
+        return view('reports.lokasi',[
+            'pallet'=>$pallet,
+            'nopo'=>$nopo,
+            'lokasi'=>$lokasi]);
+    }
+
+    public function getQtycCrtn(Request $request){
+        $pallet = $request->pallet;
+        $nopo = $request->nopo;
+
+        $qtyctn = DB::table('tinboundd')->select('qty')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
+
+        return json_encode($qtyctn);
+    }
+
+    public function getPalletLok(Request $request){
+        $nopo = $request->nopo;
+
+        $qtyctn = DB::table('tinboundd')->select('pallet')->where('nopo','=',$nopo)->get();
+
+        return json_encode($qtyctn);
     }
 
     public function getSKU(Request $request){
@@ -70,16 +96,23 @@ class LokasiController extends Controller
 
     public function updLokasi(Request $request){
         // dd($request->all());
-        $noinbound = $request->input('hdnnoinbound');
-        $sku = $request->input('hdnsku');
+        $nopo = $request->input('nopo');
         $pallet = $request->input('pallet');
-        $lokasi = $request->input('hdnlokasi');
-        $qty = $request->input('quantity');
+        $lokasi = $request->input('lokasi');
         // dd($request->all());
-        DB::table('tinboundd')->where('code_mitem','=',$sku)->where('stat','=','1')->where('no_tinbound','=',$noinbound)->update(['code_mwhse'=> $lokasi,'pallet'=>$pallet]);
+        DB::table('tinboundd')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->update(['lokasi'=> $lokasi]);
         
-        return redirect('/lokasi');
+        // return redirect('/lokasi');
 
-        // return view('reports.lokasi');
+        $pallet = DB::table('mpallet')->get();
+
+        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+
+        $lokasi = DB::table('mwhse')->get();
+        return view('reports.lokasi',[
+            'message_success'=>'Data Berhasil Di inputkan',
+            'pallet'=>$pallet,
+            'nopo'=>$nopo,
+            'lokasi'=>$lokasi]);
     }
 }

@@ -14,12 +14,18 @@ class OutboundController extends Controller
 
         $pallet = DB::table('mpallet')->get();
         
-        $nopo = DB::table('tinboundd')->get();
+        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
 
         $outbound = DB::table('toutbound')->get();
 
         $item_r = DB::table('toutboundd')->get();
-        // dd($nopo);
+
+        // $countoutitem = DB::table('tinboundid')->select(DB::raw('count(id) as jmlitem'))->where('pallet','=','PL0004')->where('nopo','=','FFFF')->where('linestat','=','O')->get();
+        // foreach($countoutitem as $itemout){
+        //     $sumitem = $itemout->jmlitem; 
+        // }
+        // $sumitem = $countoutitem->jmlitem;
+        // dd($sumitem);
         return view('reports.outbound',[
             'kodes'=>$kodes,
             'item_r'=>$item_r,
@@ -41,14 +47,14 @@ class OutboundController extends Controller
 
     public function getPoOutbound(Request $request){
         // $id = $request->input('id');
-        $item_r = DB::table('tinboundd')->get();
+        $item_r = DB::table('tinboundd')->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
     public function getCQtyOut(Request $request){
         $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
@@ -74,7 +80,7 @@ class OutboundController extends Controller
     public function sumQtyOut(Request $request){
         $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
+        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
@@ -97,7 +103,14 @@ class OutboundController extends Controller
         $sat = $request->input('sat');
         $desc = $request->input('desc');
 
-        $cartoncount = DB::table('toutboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->get();
+        $countoutitem = DB::table('tinboundid')->select(DB::raw('count(id) as jmlitem'))->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('linestat','=','O')->get();
+
+        // $sumitem = $countoutitem->jmlitem;
+        foreach($countoutitem as $itemout){
+            $sumitem = $itemout->jmlitem; 
+        }
+
+        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->where('linestat','=','C')->get();
         
         foreach($cartoncount as $itemcrtn){
             $hasil = $itemcrtn->jcrtnid; 
@@ -116,22 +129,52 @@ class OutboundController extends Controller
                 'nopo'=>$nopo,
                 'outbound'=>$outbound,
                 'item_r'=>$item_r,
-                'message_error'=> 'Data carton ID Sudah ada!']);
+                'message_error'=> 'Data carton ID Sudah dikeluarkan!']);
         }else{
-            DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+            if ($sumitem == 1) {
+                DB::table('tinboundid')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
+
+                DB::table('tinboundd')->where('nopo','=',$nopo)->update(['linestat'=>'C']);
+
+                DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+
+                $pallet = DB::table('mpallet')->get();
+                $nopo = DB::table('toutboundd')->get();
+                $outbound = DB::table('toutbound')->get();
+                $item_r = DB::table('toutboundd')->get();
+
+                return view('reports.outbound',[
+                    'pallet'=>$pallet,
+                    'nopo'=>$nopo,
+                    'outbound'=>$outbound,
+                    'item_r'=>$item_r,
+                    'message_success'=>'Data Berhasil Di inputkan']);
+            }else if ($sumitem >= 0) {
+                DB::table('tinboundid')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
+
+                DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+                $pallet = DB::table('mpallet')->get();
+                $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+                $outbound = DB::table('toutbound')->get();
+                $item_r = DB::table('toutboundd')->get();
+
+                return view('reports.outbound',[
+                    'pallet'=>$pallet,
+                    'nopo'=>$nopo,
+                    'outbound'=>$outbound,
+                    'item_r'=>$item_r,
+                    'message_success'=>'Data Keluar Berhasil Di inputkan']);
+            }
+
             
-            $pallet = DB::table('mpallet')->get();
-            $nopo = DB::table('toutboundd')->get();
-            $outbound = DB::table('toutbound')->get();
-            $item_r = DB::table('toutboundd')->get();
             // return redirect('/dashboard');
 
-            return view('reports.outbound',[
-                'pallet'=>$pallet,
-                'nopo'=>$nopo,
-                'outbound'=>$outbound,
-                'item_r'=>$item_r,
-                'message_success'=>'Data Berhasil Di inputkan']);
+            // return view('reports.outbound',[
+            //     'pallet'=>$pallet,
+            //     'nopo'=>$nopo,
+            //     'outbound'=>$outbound,
+            //     'item_r'=>$item_r,
+            //     'message_success'=>'Data Berhasil Di inputkan']);
         }
     }
 }

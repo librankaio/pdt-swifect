@@ -86,6 +86,10 @@ Route::group(['middleware' => ['auth']], function(){
     // LOKASI
     Route::get('/lokasi',[LokasiController::class, 'index'])->name('index');
 
+    Route::post('getQtycCrtn',[LokasiController::class, 'getQtycCrtn'])->name('getQtycCrtn');
+
+    Route::post('getPalletLok',[LokasiController::class, 'getPalletLok'])->name('getPalletLok');
+
     Route::post('getsku',[LokasiController::class, 'getSKU'])->name('getsku');
 
     Route::post('getinbound',[LokasiController::class, 'getInbound'])->name('getinbound');
