@@ -100,7 +100,7 @@ class LokasiController extends Controller
         $pallet = $request->input('pallet');
         $lokasi = $request->input('lokasi');
         // dd($request->all());
-        DB::table('tinboundd')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->update(['lokasi'=> $lokasi]);
+        DB::table('tinboundd')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->update(['code_mwhse'=> $lokasi]);
         
         // return redirect('/lokasi');
 
