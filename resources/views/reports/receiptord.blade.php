@@ -370,6 +370,10 @@
                                 success : function (response){
                                     console.log("Pallet Cap");
                                     console.log(response);
+                                    if (response.length == 0) {
+                                        $("#palletcap").val(0);
+                                        document.getElementById("palletcap").readOnly = false;
+                                    }
                                     for (i=0; i < response.length; i++) {
                                         jmlpalletcap = response[i].palletcap;
                                         if (response.length == 0){
