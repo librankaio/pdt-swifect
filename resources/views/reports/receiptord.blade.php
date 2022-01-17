@@ -453,6 +453,8 @@
                                     'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
                                 dataType : 'json',
                                 success : function (response){
+                                    console.log("noinbound");
+                                    console.log(noinbound);
                                     if ($("#noinbound").val() != ""){
                                         // $("#nopo").val('').trigger('change');
                                         $("#nopo").empty();

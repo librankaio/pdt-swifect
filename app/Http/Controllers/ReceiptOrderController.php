@@ -124,7 +124,7 @@ class ReceiptOrderController extends Controller
     
     public function getWhrPO(Request $request){
         $noinbound = $request->noinbound;
-        $item_r = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->orWhere('linestat','=',null)->get();
+        $item_r = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
