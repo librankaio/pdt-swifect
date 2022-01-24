@@ -228,7 +228,7 @@
                     console.log(response);
                     for (i=0; i < response.length; i++) {
                         if (response[i].no==id){
-                            tgl = response[i].tdate;
+                            tgl = response[i].tdt;
                             date = new Date(tgl).toLocaleDateString('en-GB');
                             $("#tglTrans").val(date);
                             $("#pemilik").val(response[i].name_mbp);

@@ -72,7 +72,7 @@ class OutboundController extends Controller
         $palletid = $request->palletid;
 
 
-        $pltcapcount = DB::table('toutboundidnew')->select('pltcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
+        $pltcapcount = DB::table('toutboundidnew')->select('palletcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
 
         return json_encode($pltcapcount);
     }
