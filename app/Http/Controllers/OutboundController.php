@@ -80,7 +80,7 @@ class OutboundController extends Controller
     public function sumQtyOut(Request $request){
         $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('toutboundidnew')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
+        $kodes = DB::table('tinboundidnew')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
