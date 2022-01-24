@@ -189,7 +189,7 @@
                         ?>
                             <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example" onchange="idcarton()">
                         <?php }else{?>
-                            <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="{{ $_GET['crtnid'] }}" aria-label="readonly input example" onchange="idcarton()">
+                            <input type="text" class="form-control mb-2" id="crtnid" name="crtnid"  value="" aria-label="readonly input example" onchange="idcarton()">
                         <?php }?>
                         <label for="sat" class="form-label">Satuan</label>
                         <?php 
