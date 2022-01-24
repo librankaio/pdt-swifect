@@ -12,7 +12,7 @@
                     <div class="col-sm-6">
                         <div class="my-2">
                             
-                            <label for="noinbound" class="form-label">No Inbound</label>
+                            <label for="noinbound" class="form-label">No Shipping</label>
                             <?php 
                             if(request()->input('noinbound') == null){ 
                             ?>
@@ -419,7 +419,7 @@
                     document.getElementById("palletcap").readOnly = false; 
                     for (i=0; i < response.length; i++) {
                         if (response[i].no==id){
-                            tgl = response[i].tdate;
+                            tgl = response[i].tdt;
                             date = new Date(tgl).toLocaleDateString('en-GB');
                             $("#tglTrans").val(date);
                             $("#pemilik").val(response[i].name_mbp);
@@ -455,6 +455,7 @@
                                 success : function (response){
                                     console.log("noinbound");
                                     console.log(noinbound);
+                                    console.log(response);
                                     if ($("#noinbound").val() != ""){
                                         // $("#nopo").val('').trigger('change');
                                         $("#nopo").empty();

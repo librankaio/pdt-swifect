@@ -15,15 +15,15 @@ class ReceiptOrderController extends Controller
         $noiboundsubmit = $request->input('noinbound');
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
+        $kodes = DB::table('tinboundidnew')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
 
         $pallet = DB::table('mpallet')->get();
         
-        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $nopo = DB::table('tinboundnew')->where('linestat','=','O')->get();
 
-        $inbound = DB::table('tinbound')->get();
+        $inbound = DB::table('tinboundnew')->where('nopo','!=','')->get();
 
-        $item_r = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $item_r = DB::table('tinboundnew')->where('linestat','=','O')->get();
 
         // $jmlinput = DB::table('tinboundd')->select(DB::raw('count(id) as jmlinput'))->where('no_tinbound','=','PKID2-21-7193')->where('nopo','=','AAAA')->get();
 
@@ -80,7 +80,7 @@ class ReceiptOrderController extends Controller
     // }
 
     public function getInbound(){
-        $inbound = DB::table('tinbound')->get();
+        $inbound = DB::table('tinboundnew')->get();
         return json_encode($inbound);
     }
 
@@ -118,19 +118,19 @@ class ReceiptOrderController extends Controller
     public function getPoRead(Request $request){
         $id = $request->input('id');
         $item = $request->get('nopo');
-        $nopo_r = DB::table('tinboundd')->orderby('id','asc')->where('linestat','=','O')->where('id','=',$id)->get();
+        $nopo_r = DB::table('tinboundnew')->orderby('id','asc')->where('linestat','=','O')->where('id','=',$id)->get();
         return $nopo_r;
     }
     
     public function getWhrPO(Request $request){
         $noinbound = $request->noinbound;
-        $item_r = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
+        $item_r = DB::table('tinboundnew')->where('no','=',$noinbound)->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
     public function getPo(Request $request){
         $id = $request->input('id');
-        $item_r = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $item_r = DB::table('tinboundnew')->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
@@ -138,7 +138,7 @@ class ReceiptOrderController extends Controller
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
         $palletid = $request->palletid;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('pallet','=',$palletid)->where('linestat','=','O')->get();
+        $kodes = DB::table('tinboundidnew')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('pallet','=',$palletid)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
@@ -146,14 +146,14 @@ class ReceiptOrderController extends Controller
     public function sumQty(Request $request){
         $noinbound = $request->noinbound;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
+        $kodes = DB::table('tinboundidnew')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('no_tinbound','=',$noinbound)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
 
     public function getIdCrtn(Request $request){
         $idcarton = $request->idcarton;
-        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->where('linestat','=','O')->get();
+        $cartoncount = DB::table('tinboundidnew')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->where('linestat','=','O')->get();
 
         return json_encode($cartoncount);
     }
@@ -163,7 +163,7 @@ class ReceiptOrderController extends Controller
         $nopo = $request->nopo;
         $palletid = $request->palletid;
 
-        $pltcapcount = DB::table('tinboundid')->select('palletcap')->where('no_tinbound','=',$noinbound)->where('nopo','=',$nopo)->where('pallet','=',$palletid)->where('linestat','=','O')->limit(1)->get();
+        $pltcapcount = DB::table('tinboundidnew')->select('palletcap')->where('no_tinbound','=',$noinbound)->where('nopo','=',$nopo)->where('pallet','=',$palletid)->where('linestat','=','O')->limit(1)->get();
 
         return json_encode($pltcapcount);
     }
@@ -180,7 +180,7 @@ class ReceiptOrderController extends Controller
         $palletcap = $request->input('palletcap');
         
         //validate id carton
-        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->where('linestat','=','O')->get();
+        $cartoncount = DB::table('tinboundidnew')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->where('linestat','=','O')->get();
         
         foreach($cartoncount as $itemcrtn){
             $hasil = $itemcrtn->jcrtnid; 
@@ -189,9 +189,9 @@ class ReceiptOrderController extends Controller
         // dd($hasil);
         if ($hasil >= 1){
             $pallet = DB::table('mpallet')->get();
-            $nopo = DB::table('tinboundd')->get();
-            $inbound = DB::table('tinbound')->get();
-            $item_r = DB::table('tinboundd')->get();
+            $nopo = DB::table('tinboundnew')->get();
+            $inbound = DB::table('tinboundnew')->get();
+            $item_r = DB::table('tinboundnew')->get();
             // return redirect('/dashboard');
 
             return view('reports.receiptord',[
@@ -201,17 +201,17 @@ class ReceiptOrderController extends Controller
                 'item_r'=>$item_r,
                 'message_error'=> 'Data carton ID Sudah ada!']);
         }else{
-            DB::table('tinboundid')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+            DB::table('tinboundidnew')->insert(['no_tinbound'=> $noinbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
             
-            DB::table('tinboundid')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->update(['palletcap'=> $palletcap]);
+            DB::table('tinboundidnew')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->update(['palletcap'=> $palletcap]);
 
-            DB::table('tinboundid')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'O']);
+            DB::table('tinboundidnew')->where('no_tinbound','=',$noinbound)->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'O']);
 
             $pallet = DB::table('mpallet')->get();
             // $nopo = DB::table('tinboundd')->get();
-            $nopo = DB::table('tinboundd')->where('no_tinbound','=',$noinbound)->get();
-            $inbound = DB::table('tinbound')->get();
-            $item_r = DB::table('tinboundd')->get();
+            $nopo = DB::table('tinboundnew')->where('no','=',$noinbound)->get();
+            $inbound = DB::table('tinboundnew')->get();
+            $item_r = DB::table('tinboundnew')->get();
             // return redirect('/dashboard');
 
             return view('reports.receiptord',[

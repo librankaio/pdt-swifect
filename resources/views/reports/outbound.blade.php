@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="my-2">
-                            <label for="noutbound" class="form-label">No Outbound</label>
+                            <label for="noutbound" class="form-label">No Shipping Out</label>
                             <?php 
                             if(request()->input('noutbound') == 0){ 
                             ?>

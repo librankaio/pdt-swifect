@@ -10,15 +10,15 @@ class OutboundController extends Controller
     public function index(Request $request){
         $noutbound = $request->noutbound;
         $nopo = $request->nopo;
-        $kodes = DB::table('toutboundid')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_toutbound','=',$noutbound)->get();
+        $kodes = DB::table('toutboundidnew')->select(DB::raw('count(*) as id'))->where('nopo','=',$nopo)->where('no_toutbound','=',$noutbound)->get();
 
         $pallet = DB::table('mpallet')->get();
         
-        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $nopo = DB::table('tinboundidnew')->where('linestat','=','O')->get();
 
-        $outbound = DB::table('toutbound')->get();
+        $outbound = DB::table('toutboundnew')->get();
 
-        $item_r = DB::table('toutboundd')->get();
+        $item_r = DB::table('toutboundnew')->get();
 
         // $countoutitem = DB::table('tinboundid')->select(DB::raw('count(id) as jmlitem'))->where('pallet','=','PL0004')->where('nopo','=','FFFF')->where('linestat','=','O')->get();
         // foreach($countoutitem as $itemout){
@@ -35,7 +35,7 @@ class OutboundController extends Controller
     }
 
     public function getOutbound(){
-        $outbound = DB::table('toutbound')->get();
+        $outbound = DB::table('toutboundnew')->get();
         return json_encode($outbound);
     }
 
@@ -47,21 +47,21 @@ class OutboundController extends Controller
 
     public function getPoOutbound(Request $request){
         // $id = $request->input('id');
-        $item_r = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $item_r = DB::table('tinboundidnew')->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
     public function getCQtyOut(Request $request){
         $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
+        $kodes = DB::table('tinboundidnew')->select(DB::raw('count(id) as jumlah'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
 
     public function getIdCrtnOut(Request $request){
         $idcarton = $request->idcarton;
-        $cartoncount = DB::table('toutboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->get();
+        $cartoncount = DB::table('toutboundidnew')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$idcarton)->get();
         
         return json_encode($cartoncount);
     }
@@ -72,7 +72,7 @@ class OutboundController extends Controller
         $palletid = $request->palletid;
 
 
-        $pltcapcount = DB::table('toutboundd')->select('pltcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
+        $pltcapcount = DB::table('toutboundidnew')->select('pltcap')->where('no_toutbound','=',$nooutbound)->where('pallet','=',$palletid)->where('nopo','=',$nopo)->get();
 
         return json_encode($pltcapcount);
     }
@@ -80,14 +80,14 @@ class OutboundController extends Controller
     public function sumQtyOut(Request $request){
         $pallet = $request->pallet;
         $nopo = $request->nopo;
-        $kodes = DB::table('tinboundid')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
+        $kodes = DB::table('toutboundidnew')->select(DB::raw('count(id) as jumlahqty'))->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->get();
         
         return json_encode($kodes);
     }
 
     public function getPalletOut(Request $request){
         $nopo = $request->nopo;
-        $palletout = DB::table('tinboundid')->select('pallet')->where('nopo','=',$nopo)->groupBy('pallet')->get();
+        $palletout = DB::table('tinboundidnew')->select('pallet')->where('nopo','=',$nopo)->groupBy('pallet')->get();
 
         return json_encode($palletout);
     }
@@ -103,14 +103,14 @@ class OutboundController extends Controller
         $sat = $request->input('sat');
         $desc = $request->input('desc');
 
-        $countoutitem = DB::table('tinboundid')->select(DB::raw('count(id) as jmlitem'))->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('linestat','=','O')->get();
+        $countoutitem = DB::table('toutboundidnew')->select(DB::raw('count(id) as jmlitem'))->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('linestat','=','O')->get();
 
         // $sumitem = $countoutitem->jmlitem;
         foreach($countoutitem as $itemout){
             $sumitem = $itemout->jmlitem; 
         }
 
-        $cartoncount = DB::table('tinboundid')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->where('linestat','=','C')->get();
+        $cartoncount = DB::table('toutboundidnew')->select(DB::raw('count(id) as jcrtnid'))->where('cartonid','=',$cartonid)->where('linestat','=','C')->get();
         
         foreach($cartoncount as $itemcrtn){
             $hasil = $itemcrtn->jcrtnid; 
@@ -119,9 +119,9 @@ class OutboundController extends Controller
         // dd($hasil);
         if ($hasil >= 1){
             $pallet = DB::table('mpallet')->get();
-            $nopo = DB::table('toutboundd')->get();
-            $outbound = DB::table('toutbound')->get();
-            $item_r = DB::table('toutboundd')->get();
+            $nopo = DB::table('toutboundnew')->get();
+            $outbound = DB::table('toutboundnew')->get();
+            $item_r = DB::table('toutboundnew')->get();
             // return redirect('/dashboard');
 
             return view('reports.outbound',[
@@ -132,16 +132,16 @@ class OutboundController extends Controller
                 'message_error'=> 'Data carton ID Sudah dikeluarkan!']);
         }else{
             if ($sumitem == 1) {
-                DB::table('tinboundid')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
+                DB::table('tinboundidnew')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
 
-                DB::table('tinboundd')->where('nopo','=',$nopo)->update(['linestat'=>'C']);
+                DB::table('tinboundnew')->where('nopo','=',$nopo)->update(['linestat'=>'C']);
 
-                DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+                DB::table('toutboundidnew')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
 
                 $pallet = DB::table('mpallet')->get();
-                $nopo = DB::table('toutboundd')->get();
-                $outbound = DB::table('toutbound')->get();
-                $item_r = DB::table('toutboundd')->get();
+                $nopo = DB::table('toutboundnew')->get();
+                $outbound = DB::table('toutboundnew')->get();
+                $item_r = DB::table('toutboundnew')->get();
 
                 return view('reports.outbound',[
                     'pallet'=>$pallet,
@@ -150,13 +150,13 @@ class OutboundController extends Controller
                     'item_r'=>$item_r,
                     'message_success'=>'Data Berhasil Di inputkan']);
             }else if ($sumitem >= 0) {
-                DB::table('tinboundid')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
+                DB::table('tinboundidnew')->where('pallet','=',$pallet)->where('nopo','=',$nopo)->where('code_mitem','=',$sku)->where('cartonid','=',$cartonid)->where('code_muom','=',$sat)->where('name_mitem','=',$desc)->update(['linestat'=> 'C']);
 
-                DB::table('toutboundid')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
+                DB::table('toutboundidnew')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
                 $pallet = DB::table('mpallet')->get();
-                $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
-                $outbound = DB::table('toutbound')->get();
-                $item_r = DB::table('toutboundd')->get();
+                $nopo = DB::table('tinboundidnew')->where('linestat','=','O')->get();
+                $outbound = DB::table('toutboundnew')->get();
+                $item_r = DB::table('toutboundnew')->get();
 
                 return view('reports.outbound',[
                     'pallet'=>$pallet,
