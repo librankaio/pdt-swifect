@@ -14,7 +14,7 @@ class OutboundController extends Controller
 
         $pallet = DB::table('mpallet')->get();
         
-        $nopo = DB::table('tinboundidnew')->where('linestat','=','O')->get();
+        $nopo = DB::table('tinboundidnew')->select('nopo')->groupByRaw('nopo')->where('linestat','=','O')->get();
 
         $outbound = DB::table('toutboundnew')->select('no')->groupByRaw('no')->get();
 
@@ -47,7 +47,7 @@ class OutboundController extends Controller
 
     public function getPoOutbound(Request $request){
         // $id = $request->input('id');
-        $item_r = DB::table('tinboundidnew')->where('linestat','=','O')->get();
+        $item_r = DB::table('tinboundnew')->where('linestat','=','O')->get();
         return json_encode($item_r);
     }
 
@@ -120,7 +120,7 @@ class OutboundController extends Controller
         if ($hasil >= 1){
             $pallet = DB::table('mpallet')->get();
             $nopo = DB::table('toutboundnew')->get();
-            $outbound = DB::table('toutboundnew')->get();
+            $outbound = DB::table('toutboundnew')->select('no')->groupByRaw('no')->get();
             $item_r = DB::table('toutboundnew')->get();
             // return redirect('/dashboard');
 
@@ -139,7 +139,7 @@ class OutboundController extends Controller
                 DB::table('toutboundidnew')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
 
                 $pallet = DB::table('mpallet')->get();
-                $nopo = DB::table('toutboundnew')->get();
+                $nopo = DB::table('toutboundnew')->select('nopo')->groupByRaw('nopo')->get();
                 $outbound = DB::table('toutboundnew')->get();
                 $item_r = DB::table('toutboundnew')->get();
 
@@ -155,7 +155,7 @@ class OutboundController extends Controller
                 DB::table('toutboundidnew')->insert(['no_toutbound'=> $noutbound,'pallet'=>$pallet,'code_mitem'=>$sku,"cartonid"=>$cartonid,'code_muom'=>$sat,'nopo'=>$nopo,'name_mitem'=>$desc,'usin'=>'1']);
                 $pallet = DB::table('mpallet')->get();
                 $nopo = DB::table('tinboundidnew')->where('linestat','=','O')->get();
-                $outbound = DB::table('toutboundnew')->get();
+                $outbound = DB::table('toutboundnew')->select('no')->groupByRaw('no')->get();
                 $item_r = DB::table('toutboundnew')->get();
 
                 return view('reports.outbound',[

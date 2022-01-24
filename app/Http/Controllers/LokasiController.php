@@ -106,7 +106,7 @@ class LokasiController extends Controller
 
         $pallet = DB::table('mpallet')->get();
 
-        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $nopo = DB::table('tinboundnew')->where('linestat','=','O')->get();
 
         $lokasi = DB::table('mwhse')->get();
         return view('reports.lokasi',[
