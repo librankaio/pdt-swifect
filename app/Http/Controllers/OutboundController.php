@@ -16,7 +16,7 @@ class OutboundController extends Controller
         
         $nopo = DB::table('tinboundidnew')->where('linestat','=','O')->get();
 
-        $outbound = DB::table('toutboundnew')->get();
+        $outbound = DB::table('toutboundnew')->select('no')->groupByRaw('no')->get();
 
         $item_r = DB::table('toutboundnew')->get();
 

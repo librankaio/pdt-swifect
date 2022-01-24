@@ -10,7 +10,7 @@ class LokasiController extends Controller
     public function index(){
         $pallet = DB::table('mpallet')->get();
 
-        $nopo = DB::table('tinboundd')->where('linestat','=','O')->get();
+        $nopo = DB::table('tinboundnew')->where('linestat','=','O')->get();
 
         $lokasi = DB::table('mwhse')->get();
 
@@ -24,7 +24,7 @@ class LokasiController extends Controller
         $pallet = $request->pallet;
         $nopo = $request->nopo;
 
-        $qtyctn = DB::table('tinboundd')->select('qty')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
+        $qtyctn = DB::table('tinboundnew')->select('qty')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->get();
 
         return json_encode($qtyctn);
     }
@@ -32,7 +32,7 @@ class LokasiController extends Controller
     public function getPalletLok(Request $request){
         $nopo = $request->nopo;
 
-        $qtyctn = DB::table('tinboundd')->select('pallet')->where('nopo','=',$nopo)->get();
+        $qtyctn = DB::table('tinboundnew')->select('pallet')->where('nopo','=',$nopo)->get();
 
         return json_encode($qtyctn);
     }
@@ -100,7 +100,7 @@ class LokasiController extends Controller
         $pallet = $request->input('pallet');
         $lokasi = $request->input('lokasi');
         // dd($request->all());
-        DB::table('tinboundd')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->update(['code_mwhse'=> $lokasi]);
+        DB::table('tinboundnew')->where('nopo','=',$nopo)->where('pallet','=',$pallet)->where('linestat','=','O')->update(['code_mwhse'=> $lokasi]);
         
         // return redirect('/lokasi');
 
