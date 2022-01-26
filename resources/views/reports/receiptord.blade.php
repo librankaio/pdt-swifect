@@ -1,9 +1,12 @@
 @extends('layouts.main')
 @section('content')
-<body>
+<body onload="hide_loading()">
 <form action="" class="px-4">
     <div class="container">
-        @include('layouts.flash-message')   
+        @include('layouts.flash-message')
+        <div class="loading overlay">
+            <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
         <h3>INBOUND TRANSACTION</h3>
         <br>     
         <div class="row">
@@ -312,6 +315,7 @@
         $('#nopo').on('select2:select',function (e) {
             var id = $(this).val();
             var noinbound = $('#noinbound').val();
+            show_loading()
             $.ajax({
                 url : '{{ route('getPo') }}',
                 method : 'post',
@@ -330,9 +334,11 @@
                             $("#sat").val(response[i].code_muom);
                         }
                     }
+                    hide_loading()
                     var noinbound = $('#noinbound').val();
                     var nopo = $('#nopo').val();
                     var palletid = $('#palletid').val();
+                    show_loading()
                     $.ajax({
                         url : '{{ route('getCQty') }}',
                         method : 'post',
@@ -348,8 +354,10 @@
                                 jmlInput = response[i].jumlah;
                             }
                             if (jmlInput == null){
+                                hide_loading()
                                 $("#qtycount").val(0);
                             }else{
+                                hide_loading
                                 $("#qtycount").val(jmlInput);
                             }
                             palletid = $("#palletid").val();
@@ -358,6 +366,7 @@
                             console.log(noinbound);
                             console.log(nopo);
                             console.log(palletid);
+                            show_loading()
                             $.ajax({
                                 url : '{{ route('getPalletCap') }}',
                                 method : 'post',
@@ -371,23 +380,29 @@
                                     console.log("Pallet Cap");
                                     console.log(response);
                                     if (response.length == 0) {
+                                        hide_loading()
                                         $("#palletcap").val(0);
                                         document.getElementById("palletcap").readOnly = false;
                                     }
                                     for (i=0; i < response.length; i++) {
                                         jmlpalletcap = response[i].palletcap;
                                         if (response.length == 0){
+                                            hide_loading()
                                             $("#palletcap").val(0);
                                             document.getElementById("palletcap").readOnly = false;
                                         }
                                     }
+                                    show_loading()
                                     if (jmlpalletcap == null || jmlpalletcap == 0){
+                                        hide_loading()
                                         $("#palletcap").val(0);
                                         document.getElementById("palletcap").readOnly = false; 
                                     }else if (response.length == 0){
+                                        hide_loading()
                                         $("#palletcap").val(0);
                                         document.getElementById("palletcap").readOnly = false;
                                     }else if (jmlpalletcap >= 1){
+                                        hide_loading()
                                         $("#palletcap").val(jmlpalletcap);
                                         document.getElementById("palletcap").readOnly = true; 
                                     }
@@ -405,6 +420,7 @@
         });
         $('#noinbound').on('select2:select',function (e) {
             var id = $(this).val();
+            show_loading()
             $.ajax({
                 url : '{{ route('getInbound') }}',
                 method : 'post',
@@ -424,10 +440,13 @@
                             $("#tglTrans").val(date);
                             $("#pemilik").val(response[i].name_mbp);
                             $("#note").val(response[i].note);
+                            
                         }
                     }
+                    hide_loading()
                     var noinbound = $('#noinbound').val();
                     var nopo = $('#nopo').val();
+                    show_loading()
                     $.ajax({
                         url : '{{ route('getCQty') }}',
                         method : 'post',
@@ -441,8 +460,10 @@
                                 jmlInput = response[i].jumlah;
                             }
                             if (jmlInput == null){
+                                hide_loading()
                                 $("#qtycount").val(0);
                             }else{
+                                hide_loading()
                                 $("#qtycount").val(jmlInput);
                             }
                             $.ajax({
@@ -456,6 +477,7 @@
                                     console.log("noinbound");
                                     console.log(noinbound);
                                     console.log(response);
+                                    show_loading()
                                     if ($("#noinbound").val() != ""){
                                         // $("#nopo").val('').trigger('change');
                                         $("#nopo").empty();
@@ -465,9 +487,11 @@
                                             $("#nopo").append("<option value='"+nopo+"'>"+nopo+"</option>");
 
                                         }
+                                        hide_loading()
                                     }else if ($("#noinbound").val() == 0){
                                         // $("#nopo").val('').trigger('change');
                                         alert("Data nopo harus kosong!");
+                                        hide_loading()
                                     }
                                 
                                 },
@@ -533,6 +557,29 @@
     function readonly(){
         document.getElementById("crtnid").readOnly = true; 
     }
+    //Loading Animation
+    let fadeTarget = document.querySelector(".loading")
+
+    function show_loading(){
+        fadeTarget.style.display = "block";
+        fadeTarget.style.opacity = 1;
+    }
+
+    function hide_loading(){
+        // fadeTarget.style.display = "none";
+        var fadeEffect = setInterval(() => {
+            if (!fadeTarget.style.opacity){
+                fadeTarget.style.opacity = 1;
+            }
+            if (fadeTarget.style.opacity > 0){
+                fadeTarget.style.opacity -= 1;
+            } else {
+                clearInterval(fadeEffect);
+                fadeTarget.style.display = "none";
+            }
+        }, 300);
+    }
+    //END Loading Animation
     // Trigger IDCarton
     function idcarton() {        
         // Validate Id Carton
